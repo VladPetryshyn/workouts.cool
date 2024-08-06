@@ -1,0 +1,83 @@
+.auth-container {
+  background: black;
+  padding: 0px var(--contentPadding);
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+  justify-content: center;
+
+  @media (min-width: 760px) {
+    padding: 0 var(--contentPaddingTablet);
+
+    @media (min-width: 1080px) {
+      background: url("/hero-page/phone.png");
+      background-position: right bottom;
+      background-size: 672px 800px;
+      background-repeat: no-repeat;
+      padding: 0 var(--contentPaddingDesktop);
+
+      @media (min-width: 1400px) {
+        background-size: 672px 800px;
+        padding: 0 var(--contentPaddingDesktopBig);
+      }
+    }
+  }
+
+  &-title {
+    text-transform: uppercase;
+    margin-bottom: 40px;
+    text-align: center;
+    @media (min-width: 760px) {
+      text-align: left;
+      font-size: 50px;
+    }
+  }
+  &-form {
+    gap: 20px;
+    display: flex;
+    flex-direction: column;
+
+    button {
+      margin-top: 20px;
+    }
+
+    @media (min-width: 500px) {
+      button {
+        align-self: center;
+        padding-left: 60px;
+        padding-right: 60px;
+      }
+      @media (min-width: 760px) {
+        align-items: flex-start;
+        .defaultTextFieldContainer {
+          max-width: 600px;
+        }
+        button {
+          max-width: 300px;
+          align-self: flex-start;
+          padding-left: 0px;
+          padding-right: 0px;
+        }
+        div {
+          width: 70%;
+        }
+        button {
+          width: 30%;
+        }
+      }
+    }
+  }
+
+  a {
+    margin-top: 15px;
+    text-align: center;
+    color: var(--lightBg);
+    &:hover {
+      color: var(--white);
+    }
+
+    @media (min-width: 760px) {
+      text-align: left;
+    }
+  }
+}

@@ -1,0 +1,18 @@
+.outlinedButton {
+  border: 4px var(--primary) solid;
+  padding: var(--buttonInnerPadding);
+  font-family: var(--defaultFont);
+  font-size: var(--buttonFontSize);
+  font-weight: var(--buttonFontWeight);
+  color: var(--primary);
+}
+
+.outlinedButton:hover {
+  color: var(--primaryLight);
+  border-color: var(--primaryLight);
+}
+
+.outlinedButton:active {
+  color: var(--primaryDark);
+  border-color: var(--primaryDark);
+}

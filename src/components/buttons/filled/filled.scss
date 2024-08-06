@@ -1,0 +1,19 @@
+.filledButton {
+  background: var(--primary);
+  border: 4px var(--primary) solid;
+  padding: var(--buttonInnerPadding);
+  font-family: var(--defaultFont);
+  font-size: var(--buttonFontSize);
+  font-weight: var(--buttonFontWeight);
+  color: var(--white);
+}
+
+.filledButton:hover {
+  border-color: var(--primaryLight);
+  background: var(--primaryLight);
+}
+
+.filledButton:active {
+  border-color: var(--primaryDark);
+  background: var(--primaryDark);
+}

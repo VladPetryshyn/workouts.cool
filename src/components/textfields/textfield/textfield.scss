@@ -1,0 +1,48 @@
+.defaultTextFieldContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.defaultTextFieldLabel {
+  display: block;
+  font-family: Roboto;
+  font-weight: 900;
+  font-size: 25px;
+  margin-bottom: 10px;
+}
+
+.defaultTextFieldInput {
+  border: 2px var(--primary) solid;
+  background: transparent;
+  padding: 28px 24px;
+  font-family: Roboto;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--primaryDark);
+  margin: 2px;
+  flex: 1;
+}
+
+.defaultTextFieldInput:focus {
+  color: var(--primary);
+  border-width: 4px;
+  margin: 0;
+}
+
+.defaultTextFieldInput:hover {
+  color: var(--primaryLight);
+  border-color: var(--primaryLight);
+}
+
+.defaultTextFieldInput.error {
+  border-color: var(--error);
+  color: var(--error);
+}
+
+.defaultTextFieldErrorLabel {
+  display: block;
+  color: var(--error);
+  font-family: Roboto;
+  font-weight: 600;
+  font-size: 18px;
+}

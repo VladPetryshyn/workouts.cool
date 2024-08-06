@@ -1,0 +1,99 @@
+.header {
+  position: sticky;
+  top: 0;
+  min-width: 100vw;
+  display: flex;
+  flex-direction: column;
+  z-index: 99999;
+
+  @media (min-width: 760px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    background: var(--headerBg);
+    backdrop-filter: blur(10px);
+  }
+
+  .header-content {
+    background: black;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px var(--contentPadding);
+
+    &.hidden {
+      background: var(--headerBg);
+      backdrop-filter: blur(10px);
+    }
+    @media (min-width: 760px) {
+      padding: 0px;
+      padding-left: var(--contentPaddingTablet);
+      background: transparent !important;
+      .icon {
+        display: none;
+      }
+    }
+    @media (min-width: 1080px) {
+      padding-left: var(--contentPaddingDesktop);
+    }
+
+    @media (min-width: 1400px) {
+      padding-left: var(--contentPaddingDesktopBig);
+    }
+  }
+}
+
+.header-nav-container {
+  display: flex;
+  flex-direction: column;
+  background: black;
+  left: 0;
+  padding: 90px var(--contentPadding);
+  height: 100vh;
+  @media (min-width: 760px) {
+    padding: 0;
+  }
+  &.hidden {
+    display: none;
+    @media (min-width: 760px) {
+      display: flex;
+      padding-top: 0;
+      padding-bottom: 0;
+      height: auto;
+      padding-right: var(--contentPaddingTablet);
+      background: transparent;
+      backdrop-filter: blur(0px);
+    }
+
+    @media (min-width: 1080px) {
+      padding-right: var(--contentPaddingDesktop);
+    }
+
+    @media (min-width: 1400px) {
+      padding-right: var(--contentPaddingDesktopBig);
+    }
+  }
+  .header-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    @media (min-width: 760px) {
+      flex-direction: row;
+    }
+    a {
+      font-size: 46px;
+      font-family: var(--displayFont);
+      text-decoration: none;
+      &:hover {
+        color: var(--primary);
+      }
+      &.active {
+        text-decoration: underline;
+      }
+      @media (min-width: 760px) {
+        font-size: 24px;
+      }
+    }
+  }
+}

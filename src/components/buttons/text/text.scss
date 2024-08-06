@@ -1,0 +1,16 @@
+.textButton {
+  border: 4px transparent solid;
+  padding: var(--buttonInnerPadding);
+  font-family: var(--defaultFont);
+  font-size: var(--buttonFontSize);
+  font-weight: var(--buttonFontWeight);
+  color: var(--primary);
+}
+
+.textButton:hover {
+  color: var(--primaryLight);
+}
+
+.textButton:active {
+  color: var(--primaryDark);
+}

@@ -1,0 +1,183 @@
+.hero-page-content {
+  padding: 0 var(--contentPadding);
+  @media (min-width: 760px) {
+    padding: 0 var(--contentPaddingTablet);
+  }
+
+  @media (min-width: 1080px) {
+    padding: 0 var(--contentPaddingDesktop);
+  }
+  @media (min-width: 1400px) {
+    padding: 0 var(--contentPaddingDesktopBig);
+  }
+  .hero-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh;
+    background: url("/hero-page/phone.png");
+    background-position: center bottom;
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding-bottom: 0;
+
+    @media (min-width: 1080px) {
+      padding-left: var(--contentPaddingTablet);
+      &-text {
+        width: 80%;
+      }
+      @media (min-width: 1400px) {
+        &-text {
+          width: 60%;
+        }
+      }
+    }
+    .displayFontH2 {
+      text-transform: uppercase;
+      color: var(--primary);
+      text-align: center;
+    }
+    p {
+      text-align: center;
+      margin-top: 10px;
+    }
+    .call-to-action-btn {
+      margin-top: 50px;
+      align-self: center;
+    }
+
+    @media (min-width: 1080px) {
+      &-text {
+        .displayFontH2 {
+          font-size: 50px;
+        }
+        p {
+          font-size: 34px;
+          font-weight: 700;
+        }
+      }
+    }
+
+    @media (min-width: 1080px) {
+      background-position: right bottom;
+      background-size: 672px 800px;
+      .displayFontH2 {
+        text-align: left;
+      }
+      p {
+        text-align: left;
+      }
+
+      .call-to-action-btn {
+        align-self: flex-start;
+      }
+      @media (min-width: 1400px) {
+        background-size: 672px 800px;
+      }
+    }
+  }
+
+  .testimonials {
+    display: none;
+    padding: 70px 0;
+    .displayFontH2 {
+      text-transform: uppercase;
+      color: var(--primary);
+      text-align: center;
+      @media (min-width: 1080px) {
+        font-size: 50px;
+      }
+    }
+
+    &-content {
+      margin-top: 30px;
+      display: flex;
+      flex-wrap: wrap;
+
+      .testimonial {
+        flex: 1;
+        background: var(--surfaceContainerBg);
+        &-img {
+          flex: 0.3;
+          max-height: 200px;
+          overflow: hidden;
+          img {
+            object-fit: scale-down;
+            height: 100%;
+            width: 100%;
+          }
+        }
+
+        &-content {
+          padding: 20px;
+          flex: 1;
+          &-header {
+            font-family: var(--displayFont);
+            text-transform: uppercase;
+            font-style: italic;
+          }
+          &-p {
+            margin-top: 10px;
+          }
+        }
+      }
+
+      @media (min-width: 760px) {
+        .testimonial {
+          max-width: 50%;
+        }
+      }
+    }
+  }
+
+  .join-community {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding-top: 20px;
+    padding-bottom: 170px;
+
+    .globe {
+      height: 200px;
+      width: 200px;
+      margin-bottom: 70px;
+      transform: rotate(23deg);
+
+      @media (min-width: 500px) {
+        height: 250px;
+        width: 250px;
+
+        @media (min-width: 1080px) {
+          align-self: flex-start;
+
+          @media (min-width: 1400px) {
+            height: 300px;
+            width: 300px;
+          }
+        }
+      }
+    }
+
+    .displayFontH2 {
+      text-transform: uppercase;
+      color: var(--primary);
+      text-align: center;
+      @media (min-width: 650px) {
+        max-width: 60%;
+      }
+      @media (min-width: 1080px) {
+        font-size: 50px;
+      }
+    }
+
+    button {
+      border-color: white;
+      color: white;
+      text-transform: uppercase;
+      align-self: center;
+      margin-top: 40px;
+    }
+  }
+}
