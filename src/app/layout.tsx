@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.scss";
 import { Header } from "@/components/header";
-import { NextIntlClientProvider, useTranslations } from "next-intl";
+import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
-import { connectDB } from "@/lib/mongodb";
+import NextAuthProvider from "@/components/next-auth-provider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -22,10 +22,12 @@ export default async function RootLayout({
     <html lang={locale}>
       <title>Cool workouts</title>
       <body>
-        <NextIntlClientProvider messages={messages}>
-          <Header />
-          {children}
-        </NextIntlClientProvider>
+        <NextAuthProvider>
+          <NextIntlClientProvider messages={messages}>
+            <Header />
+            {children}
+          </NextIntlClientProvider>
+        </NextAuthProvider>
       </body>
     </html>
   );

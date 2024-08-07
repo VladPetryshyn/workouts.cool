@@ -4,12 +4,15 @@ import "../auth.scss";
 import { FilledButton } from "@/components/buttons/filled";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import { signIn } from "next-auth/react";
+import { AuthErrors } from "../types";
+import { useTranslations } from "next-intl";
 
 export default function SignIn() {
   const router = useRouter();
-  let error = "";
+  const [errors, setErrors] = useState<AuthErrors>({});
+  const t = useTranslations("Authentication");
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -20,7 +23,7 @@ export default function SignIn() {
       redirect: false,
     });
     if (res?.error) {
-      error = res.error as string;
+      setErrors(JSON.parse(res.error));
     }
     if (res?.ok) {
       return router.push("/");
@@ -28,15 +31,31 @@ export default function SignIn() {
   };
 
   return (
-    <div className="auth-container">
-      <h1 className="displayFontH2 auth-container-title">welcome back</h1>
-      <form className="auth-container-form" onSubmit={handleSubmit}>
-        <TextField placeholder="E-mail address" type="email" name="email" />
-        <TextField placeholder="Password" type="password" name="password" />
-        <FilledButton text="Log In" />
-      </form>
-      <Link href="/auth/sign-up">Don't have an account? Join now!</Link>
-      <h1 color="red">{error}</h1>
-    </div>
+    <>
+      <title>{t("welcome back")}</title>
+      <div className="auth-container">
+        <h1 className="displayFontH2 auth-container-title">
+          {t("welcome back")}
+        </h1>
+        <form className="auth-container-form" onSubmit={handleSubmit}>
+          <TextField
+            placeholder={t("E-mail address")}
+            type="email"
+            name="email"
+            error={errors.email?.[0]}
+          />
+          <TextField
+            placeholder={t("Password")}
+            type="password"
+            name="password"
+            error={errors.password?.[0]}
+          />
+          <FilledButton text={t("Log In")} />
+        </form>
+        <Link href="/auth/sign-up">
+          {t("Don't have an account? Join now!")}
+        </Link>
+      </div>
+    </>
   );
 }

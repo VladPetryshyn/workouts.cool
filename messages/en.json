@@ -1,5 +1,28 @@
 {
-  "Layout": {
-  "title": "Workouts.cool"
-}
+  "Hero": {
+    "title": "Welcome to Cool Workouts",
+    "Join the world wide community!": "Join the world wide community!",
+    "join now!": "join now!",
+    "Start the change": "Start the change",
+    "time_to_change": "time to change yourself. the clock is ticking!",
+    "Start changing you're body with our articles, and workouts": "Start changing you're body with our articles, and workouts"
+  },
+  "Header": {
+    "workouts": "workouts",
+    "articles": "articles",
+    "about us": "about us",
+    "sign in": "sign in"
+  },
+  "Authentication": {
+    "welcome back": "Welcome back",
+    "E-mail address": "E-mail address",
+    "Password": "Password",
+    "Don't have an account? Join now!": "Don't have an account? Join now!",
+    "Log In": "Log In",
+    "Join our community": "Join our community",
+    "Username": "Username",
+    "Register": "Register",
+    "Already have an account? Log in!": "Already have an account? Log in!",
+    "This email already exists": "This email already exists"
+  }
 }

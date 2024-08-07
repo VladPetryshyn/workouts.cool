@@ -5,9 +5,14 @@ import Link from "next/link";
 import { register } from "@/actions/register";
 import "../auth.scss";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { AuthErrors } from "../types";
+import { useTranslations } from "next-intl";
 
 export default function SignUp() {
   const router = useRouter();
+  const [errors, setErrors] = useState<AuthErrors>();
+  const t = useTranslations("Authentication");
 
   const handleSubmit = async (formData: FormData) => {
     const r = await register({
@@ -15,9 +20,9 @@ export default function SignUp() {
       password: formData.get("password"),
       username: formData.get("username"),
     });
-    //ref.current?.reset();
-    if (r?.error) {
-      //setError(r.error);
+    if (r?.isError) {
+      const { isError, ...errors } = r;
+      setErrors(errors as AuthErrors);
       return;
     } else {
       return router.push("/auth/sign-in");
@@ -25,15 +30,39 @@ export default function SignUp() {
   };
 
   return (
-    <div className="auth-container">
-      <h1 className="displayFontH2 auth-container-title">Join our community</h1>
-      <form className="auth-container-form" action={handleSubmit}>
-        <TextField placeholder="Username" name="username" type="text" />
-        <TextField placeholder="E-mail address" name="email" type="email" />
-        <TextField placeholder="Password" name="password" type="password" />
-        <FilledButton text="Register" />
-      </form>
-      <Link href="/auth/sign-in">Already have an account? Log in!</Link>
-    </div>
+    <>
+      <title>
+          {t("Join our community")}
+</title>
+      <div className="auth-container">
+        <h1 className="displayFontH2 auth-container-title">
+          {t("Join our community")}
+        </h1>
+        <form className="auth-container-form" action={handleSubmit}>
+          <TextField
+            placeholder={t("Username")}
+            name="username"
+            type="text"
+            error={errors?.username?.[0]}
+          />
+          <TextField
+            placeholder={t("E-mail address")}
+            name="email"
+            type="email"
+            error={errors?.email?.[0]}
+          />
+          <TextField
+            placeholder={t("Password")}
+            name="password"
+            type="password"
+            error={errors?.password?.[0]}
+          />
+          <FilledButton text={t("Register")} />
+        </form>
+        <Link href="/auth/sign-in">
+          {t("Already have an account? Log in!")}
+        </Link>
+      </div>
+    </>
   );
 }
