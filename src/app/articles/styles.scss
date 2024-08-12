@@ -1,0 +1,19 @@
+@import "../globals.scss";
+
+.articles-body {
+  @include content-padding;
+    margin-top: 60px;
+  & > h1 {
+    color: var(--primary);
+    text-transform: uppercase;
+    margin-bottom: 40px;
+  }
+  &-content {
+    @media (min-width: 760px) {
+      max-width: 70%;
+    }
+    .article-card {
+      margin-bottom: 20px;
+    }
+  }
+}

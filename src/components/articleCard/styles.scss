@@ -1,0 +1,34 @@
+.article-card {
+  background: var(--cardSurfaceLight);
+  padding: 20px;
+  &-text {
+    padding: 10px 20px;
+    width: 80%;
+    &-description {
+      --ln-height: 20px;
+      line-height: var(--ln-height);
+      max-height: calc(var(--ln-height) * 4);
+      overflow: hidden;
+      position: relative;
+      margin-top: 10px;
+    }
+  }
+  &-interact {
+    padding: 0px 20px;
+    display: flex;
+    margin-top: 30px;
+    &-view {
+      border: none;
+      outline: none;
+      font-size: 23px;
+      display: flex;
+      align-items: center;
+      align-self: flex-start;
+      padding: 7px;
+      padding-left: 0;
+      img {
+        margin-left: 10px;
+      }
+    }
+  }
+}

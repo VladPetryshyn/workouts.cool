@@ -37,9 +37,8 @@ export const authOptions: NextAuthOptions = {
           );
 
           if (!passwordMatch)
-            throw new Error(
-              JSON.stringify({ passwordError: "Wrong Password" }),
-            );
+            throw new Error(JSON.stringify({ password: ["Wrong Password"] }));
+
           return user;
         } else {
           throw new Error(
@@ -51,6 +50,25 @@ export const authOptions: NextAuthOptions = {
   ],
   session: {
     strategy: "jwt",
+  },
+  callbacks: {
+    async jwt({ token, account, user }) {
+      if (user && token) {
+        token.username = user?.username;
+        token.id = user?._id;
+        token.email = user?.email;
+      }
+
+      return token;
+    },
+    async session({ session, token, user }) {
+      // Send properties to the client, like an access_token and user id from a provider.
+      session.user.username = token.username;
+      session.user.id = token.id;
+      session.user.email = token.email;
+
+      return session;
+    },
   },
 };
 

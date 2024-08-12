@@ -1,4 +1,5 @@
 import mongoose, { Schema, model } from "mongoose";
+import { ArticleDocument } from "./Articles";
 
 export interface UserDocument {
   _id: string;
@@ -8,12 +9,15 @@ export interface UserDocument {
   image?: string;
   createdAt: Date;
   updatedAt: Date;
+  articles: Array<ArticleDocument>;
 }
 
-const UserSchema = new Schema<UserDocument>({
+export const UserSchema = new Schema<UserDocument>(
+  {
     email: {
       type: String,
-      unique: true,
+      //unique: true,
+      sparse: true,
       required: [true, "Email is required"],
       match: [
         /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
@@ -22,17 +26,23 @@ const UserSchema = new Schema<UserDocument>({
     },
     password: {
       type: String,
-      required: true
+      required: true,
     },
     username: {
       type: String,
-      required: [true, "Name is required"]
-    }
+      required: [true, "Name is required"],
+    },
+    articles: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Article",
+      },
+    ],
   },
   {
     timestamps: true,
-  }
+  },
 );
 
-const  User  =  mongoose.models?.User  ||  model<UserDocument>('User', UserSchema);
-export  default  User;
+const User = mongoose.models?.User || model<UserDocument>("User", UserSchema);
+export default User;

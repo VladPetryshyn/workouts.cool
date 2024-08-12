@@ -1,0 +1,111 @@
+.workout-editor-container {
+  display: flex;
+  flex-direction: column;
+  padding: 80px 0;
+  @media (min-width: 760px) {
+    margin: 0 80px;
+    @media (min-width: 1080px) {
+      margin: 0 120px;
+      @media (min-width: 1400px) {
+        margin: 0 200px;
+      }
+    }
+  }
+
+  .workout-editor-title {
+    background: transparent;
+    border: none;
+    color: var(--primary);
+    align-self: center;
+    text-align: center;
+    margin-bottom: 60px;
+    width: 100%;
+  }
+  &-save-btn {
+    align-self: center;
+    margin-top: 30px;
+  }
+
+  &-dnd {
+    background: var(--cardSurfaceLight);
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+
+    &-btn {
+      align-self: center;
+      outline: none;
+      border: none;
+      margin-bottom: -20px;
+    }
+    &-item {
+      display: flex;
+      background: var(--cardSurfaceDark);
+      padding: 20px 10px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+
+      .handler {
+        align-self: center;
+        cursor: grab;
+      }
+      .content {
+        margin-left: 20px;
+        &-title {
+          display: flex;
+          align-items: center;
+          h2 {
+            white-space: nowrap;
+            min-width: 100px;
+            @media (min-width: 760px) {
+              max-width: 300px;
+              @media (min-width: 1080px) {
+                max-width: 600px;
+              }
+            }
+            overflow: hidden;
+            br {
+              display: none;
+            }
+            * {
+              display: inline;
+              white-space: nowrap;
+            }
+          }
+          button {
+            margin-left: 15px;
+          }
+        }
+        &-time-selector {
+          display: flex;
+          align-items: center;
+          margin-top: 5px;
+          p {
+            color: #3b3b3b;
+            margin-left: 5px;
+          }
+        }
+        &-p {
+          margin-top: 20px;
+          word-break: break-all;
+          @media (min-width: 760px) {
+            width: 450px;
+            @media (min-width: 1080px) {
+              width: 600px;
+              @media (min-width: 1400px) {
+                width: 900px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+[contenteditable="true"]:empty:before {
+  content: attr(placeholder);
+  pointer-events: none;
+  display: block; /* For Firefox */
+}
