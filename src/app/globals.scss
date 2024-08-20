@@ -121,8 +121,7 @@ a {
 }
 
 @mixin content-padding {
-  @media (min-width: 760px) {
-    flex-direction: row-reverse;
+  padding:0 var(--contentPadding); @media (min-width: 760px) {
     padding: 0 var(--contentPaddingTablet);
     @media (min-width: 1080px) {
       padding: 0 var(--contentPaddingDesktop);

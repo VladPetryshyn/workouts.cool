@@ -1,4 +1,4 @@
-import { DetailedHTMLProps, FC, InputHTMLAttributes } from "react";
+import { DetailedHTMLProps, FC, forwardRef, InputHTMLAttributes, Ref } from "react";
 import "./textfield.scss";
 import classNames from "classnames";
 
@@ -14,13 +14,10 @@ interface Props
   error?: string;
 }
 
-export const TextField: FC<Props> = ({
-  label,
-  placeholder,
-  id,
-  error,
-  ...props
-}) => {
+export const TextField = forwardRef(function TextField(
+  { label, placeholder, id, error, ...props }: Props,
+  ref: Ref<HTMLInputElement>,
+) {
   return (
     <div className="defaultTextFieldContainer">
       <input
@@ -28,6 +25,7 @@ export const TextField: FC<Props> = ({
         id={id}
         type="email"
         className={classNames("defaultTextFieldInput", { error: !!error })}
+        ref={ref}
         {...props}
       />
       <label htmlFor={id} className="defaultTextFieldErrorLabel">
@@ -35,4 +33,4 @@ export const TextField: FC<Props> = ({
       </label>
     </div>
   );
-};
+});

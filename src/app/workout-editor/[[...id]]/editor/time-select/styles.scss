@@ -1,0 +1,42 @@
+.content-time-selector-btn-time {
+  position: absolute;
+  left: 40px;
+  background: var(--cardSurfaceLight);
+  max-height: 200px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -3px 3px 10px black;
+  z-index: 999;
+  &-ok {
+    padding: 15px;
+    margin-left: auto;
+  }
+  &-container {
+    display: flex;
+    overflow: hidden;
+    border-bottom: 4px solid var(--cardSurfaceDark);
+  }
+  &-itm {
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    &:first-child {
+      border-right: 4px solid var(--cardSurfaceDark);
+    }
+  }
+  .item {
+    padding: 10px 20px;
+    &:hover {
+      background: var(--cardSurfaceDark);
+      p {
+        color: var(--primary);
+      }
+    }
+    &.active {
+      background: #000;
+      p {
+      color: var(--primary);
+      }
+    }
+  }
+}

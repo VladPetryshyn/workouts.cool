@@ -1,19 +1,31 @@
 import mongoose, { model, Schema } from "mongoose";
 import { UserDocument } from "./User";
 
+export interface WorkoutItem {
+  id: string;
+  title: string;
+  description: string;
+  minTime: number;
+  secTime: number;
+}
+
 export interface WorkoutDocument {
   _id: string;
   author: UserDocument;
   title: string;
-  steps: [
-    {
-      time: number;
-      title: string;
-      description: string;
-      id: string;
-    },
-  ];
+  steps: Array<WorkoutItem>;
 }
+
+const StepSchema = new Schema<WorkoutItem>(
+  {
+    id: String,
+    title: String,
+    description: String,
+    minTime: Number,
+    secTime: Number,
+  },
+  { _id: false },
+);
 
 const WorkoutSchema = new Schema<WorkoutDocument>(
   {
@@ -27,6 +39,7 @@ const WorkoutSchema = new Schema<WorkoutDocument>(
       ref: "User",
       required: true,
     },
+    steps: [StepSchema],
   },
   { timestamps: true },
 );

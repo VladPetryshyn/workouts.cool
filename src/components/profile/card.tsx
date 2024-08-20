@@ -4,6 +4,7 @@ import "./styles.scss";
 import { FC } from "react";
 import Image from "next/image";
 import { OutlinedButton } from "../buttons/outlined";
+import { EditUsername } from "./edit/username";
 
 interface Props {
   username: string;
@@ -32,17 +33,16 @@ export const ProfileCard: FC<Props> = ({ username, id, image, className }) => {
         )}
       </div>
       <h2>
-        {username}
-        {isOwner && (
-          <Image
-            width={20}
-            height={20}
-            src={"/pencil.svg"}
-            alt="Profile edit username icon"
-          />
-        )}
+        {`${username} `}
+        {isOwner && <EditUsername username={username} userId={id} />}
       </h2>
-      {isOwner && <OutlinedButton text="Logout" onClick={signOut} className="profile-card-logout" />}
+      {isOwner && (
+        <OutlinedButton
+          text="Logout"
+          onClick={signOut}
+          className="profile-card-logout"
+        />
+      )}
     </div>
   );
 };

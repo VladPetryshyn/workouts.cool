@@ -7,6 +7,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { isMobileDevice } from "@/lib/user-agent";
 import { richTextToHtml } from "@/lib/rich-text2html";
+import { CardDeleteButton } from "@/components/delete/deleteArticle";
+import { DeleteArticleArticlePage } from "./delete";
 
 interface Props {
   params: {
@@ -33,6 +35,9 @@ export default async function ArticleId({ params: { articleId } }: Props) {
               <Link href={`/article-editor/${article.id}`}>
                 <Image width={40} height={40} src="/pencil.svg" />
               </Link>
+            )}
+            {isOwner && (
+              <DeleteArticleArticlePage title={article.title} id={article.id} />
             )}
           </h1>
         </div>

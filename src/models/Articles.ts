@@ -6,6 +6,7 @@ export interface ArticleDocument {
   author: UserDocument;
   title: string;
   content: string;
+  contentPreview: string;
   hidden: boolean;
 }
 
@@ -21,9 +22,14 @@ const ArticleSchema = new Schema<ArticleDocument>(
       required: [true, "Content is required"],
       minlength: [3, "Content must be at least 3 characters long"],
     },
+    contentPreview: {
+      type: String,
+      required: [true, "Content is required"],
+      minlength: [3, "Content must be at least 3 characters long"],
+    },
     hidden: Boolean,
     author: {
-      type: mongoose.SchemaTypes.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
@@ -31,6 +37,7 @@ const ArticleSchema = new Schema<ArticleDocument>(
   { timestamps: true },
 );
 
-const Article =
-  mongoose.models?.Article || model<ArticleDocument>("Article", ArticleSchema);
+export const Article =
+  mongoose.models?.Article ||
+  mongoose.model<ArticleDocument>("Article", ArticleSchema);
 export default Article;

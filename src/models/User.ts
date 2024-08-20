@@ -1,5 +1,6 @@
 import mongoose, { Schema, model } from "mongoose";
 import { ArticleDocument } from "./Articles";
+import { WorkoutDocument } from "./Workout";
 
 export interface UserDocument {
   _id: string;
@@ -10,6 +11,7 @@ export interface UserDocument {
   createdAt: Date;
   updatedAt: Date;
   articles: Array<ArticleDocument>;
+  workouts: Array<WorkoutDocument>;
 }
 
 export const UserSchema = new Schema<UserDocument>(
@@ -36,6 +38,12 @@ export const UserSchema = new Schema<UserDocument>(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Article",
+      },
+    ],
+    workouts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Workout",
       },
     ],
   },

@@ -1,0 +1,11 @@
+.modal-button {
+  padding: 10px 15px;
+  background: #000;
+
+  &:hover {
+    background: var(--cardSurfaceDark);
+    p {
+      color: var(--primaryLight);
+    }
+  }
+}

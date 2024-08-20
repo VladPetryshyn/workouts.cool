@@ -2,14 +2,11 @@ import { isMobileDevice } from "@/lib/user-agent";
 import "./styles.scss";
 import { OutlinedButton } from "@/components/buttons/outlined";
 import Link from "next/link";
-import dynamic from "next/dynamic";
-import { getArticleToEdit } from "@/actions/getArticleToEdit";
 import { redirect } from "next/navigation";
-
-const Editor = dynamic(() => import("./editor/editor.tsx"), {
-  ssr: false,
-  loading: () => <p> Loading... </p>,
-});
+import { headers } from "next/headers";
+import { createArticleForEditTag } from "@/lib/fetching";
+import ArticleEditor from "./editor/editor";
+import { createUrlBase } from "@/lib/urlCreators";
 
 interface Props {
   params: {
@@ -21,8 +18,17 @@ export default async function ArticlesEditorPage({ params }: Props) {
   const articleId = params.id?.[0];
   const isMobile = await isMobileDevice();
   let article = null;
-  if (articleId) {
-    article = await getArticleToEdit(articleId);
+  if (articleId && !isMobile) {
+    const resp = await fetch(
+      createUrlBase(`/api/articles/getForEdit/${articleId}`),
+      {
+        headers: headers(),
+        next: {
+          tags: [createArticleForEditTag(articleId)],
+        },
+      },
+    );
+    article = await resp.json();
     if (!article && articleId) redirect("/404");
   }
 
@@ -41,7 +47,9 @@ export default async function ArticlesEditorPage({ params }: Props) {
           </Link>
         </main>
       )}
-      {!isMobile && <Editor articleId={params?.id?.[0]} article={article} />}
+      {!isMobile && (
+        <ArticleEditor articleId={params?.id?.[0]} article={article} />
+      )}
     </>
   );
 }

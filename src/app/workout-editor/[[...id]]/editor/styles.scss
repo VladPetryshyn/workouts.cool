@@ -37,7 +37,9 @@
       align-self: center;
       outline: none;
       border: none;
-      margin-bottom: -20px;
+      &.has-content {
+        margin-top: 40px;
+      }
     }
     &-item {
       display: flex;
@@ -78,12 +80,16 @@
           }
         }
         &-time-selector {
-          display: flex;
+          display: inline;
           align-items: center;
-          margin-top: 5px;
-          p {
-            color: #3b3b3b;
-            margin-left: 5px;
+          position: relative;
+          &-btn {
+            margin-top: 5px;
+            display: flex;
+            .time-value {
+              margin-left: 5px;
+              color: #5C5C5C;
+            }
           }
         }
         &-p {

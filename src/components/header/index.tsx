@@ -27,7 +27,7 @@ export const Header = () => {
   const t = useTranslations("Header");
 
   const isAuthenticated = session.status === "authenticated";
-  const profileUrl = `/profile/${session.data?.user.id}/articles`;
+  const profileUrl = `/profile/${session.data?.user.id}`;
   return (
     <header className="header">
       <div className={classNames("header-content", { hidden: !isClicked })}>
@@ -56,7 +56,7 @@ export const Header = () => {
                 alt={t("profilePicture")}
               />
               <div className="header-nav-profile-text">
-                <h3>Epifaniy Kukuev</h3>
+                <h3>{session?.data?.user?.username}</h3>
                 <p>
                   <span>view profile</span>
                   <Image width={18} height={18} src="/arrow-right.svg" />
@@ -64,8 +64,8 @@ export const Header = () => {
               </div>
             </Link>
           )}
-          <a href="#">{t("workouts")}</a>
-          <a href="#">{t("articles")}</a>
+          <a href="/workouts">{t("workouts")}</a>
+          <Link href="/articles">{t("articles")}</Link>
           <a href="#">{t("about us")}</a>
           {isAuthenticated && (
             <Link href={profileUrl} className="header-nav-profile-desktop">

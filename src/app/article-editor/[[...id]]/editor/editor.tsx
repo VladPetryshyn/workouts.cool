@@ -33,6 +33,7 @@ interface Props {
 }
 
 export default function ArticleEditor({ articleId, article }: Props) {
+  const [id, setId] = useState(articleId);
   const router = useRouter();
   const [title, setTitle] = useState(article?.title ?? "New title");
   const [slateValue, setSlateValue] = useState<string>(article?.content ?? "");
@@ -46,14 +47,20 @@ export default function ArticleEditor({ articleId, article }: Props) {
   );
   const [editor] = useState(() => withReact(createEditor()));
   const onSubmit = async () => {
-    if (!articleId) {
+    if (!id) {
       const response = await fetch("/api/articles/create", {
         method: "POST",
         body: JSON.stringify({ title, content: slateValue }),
       });
       const newArticle = await response.json();
+
       if (newArticle?._id) {
-        router.replace(`/article-editor/${newArticle?._id}`);
+        setId(newArticle?._id);
+        window.history.pushState(
+          {},
+          "",
+          `${window.location.pathname}/${newArticle?._id}`,
+        );
       }
     } else {
       const response = await fetch("/api/articles/update", {

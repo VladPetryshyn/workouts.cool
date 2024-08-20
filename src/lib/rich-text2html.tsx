@@ -45,3 +45,26 @@ const converter = (itm: item) => {
       );
   }
 };
+
+const makeContentPreviewRec = (item: item) => {
+  if (item.text) return item.text;
+
+  let text = "";
+  if (item?.children) {
+    for (const i of item?.children) {
+      text += makeContentPreviewRec(i) ?? "";
+    }
+  }
+
+  return text;
+};
+
+export const makeContentPreview = (items: item[]) => {
+  let text = "";
+
+  for (const i of items) {
+    text += makeContentPreviewRec(i) ?? "";
+  }
+
+  return text;
+};

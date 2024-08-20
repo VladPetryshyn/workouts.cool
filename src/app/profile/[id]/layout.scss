@@ -1,0 +1,22 @@
+@import "../../globals.scss";
+
+.profile-container {
+  @include content-padding;
+  margin-top: 40px;
+  padding: 0 var(--contentPadding);
+  display: flex;
+  flex-direction: column;
+
+  @media (min-width: 1080px) {
+    flex-direction: row-reverse;
+    .profile-content {
+      margin-top: 0;
+      flex: 7;
+      margin-right: 80px;
+    }
+
+    &-profile-card {
+      flex: 4;
+    }
+  }
+}

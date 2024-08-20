@@ -5,14 +5,11 @@ import { isMobileDevice } from "@/lib/user-agent";
 import "./styles.scss";
 import { OutlinedButton } from "@/components/buttons/outlined";
 import Link from "next/link";
-import dynamic from "next/dynamic";
-import { getArticleToEdit } from "@/actions/getArticleToEdit";
 import { redirect } from "next/navigation";
-
-const Editor = dynamic(() => import("./editor/editor.tsx"), {
-  ssr: false,
-  loading: () => <p> Loading... </p>,
-});
+import { headers } from "next/headers";
+import { createWorkoutForEditTag } from "@/lib/fetching";
+import WorkoutEditor from "./editor/editor";
+import { createUrlBase } from "@/lib/urlCreators";
 
 interface Props {
   params: {
@@ -23,7 +20,22 @@ interface Props {
 export default async function WorkoutEditorPage({ params }: Props) {
   const workoutId = params.id?.[0];
   const isMobile = await isMobileDevice();
+  let workout = null;
+  if (workoutId && !isMobile) {
+    const resp = await fetch(
+      createUrlBase(`/api/workouts/getForEdit/${workoutId}`),
+      {
+        headers: headers(),
+        next: {
+          tags: [createWorkoutForEditTag(workoutId)],
+        },
+      },
+    );
+    workout = await resp.json();
+    if (!workout && workoutId) redirect("/404");
+  }
 
+  console.log(workout);
   return (
     <>
       <title>Workout Editor</title>
@@ -39,7 +51,7 @@ export default async function WorkoutEditorPage({ params }: Props) {
           </Link>
         </main>
       )}
-      <Editor />
+      <WorkoutEditor workoutId={workoutId} workout={workout} />
     </>
   );
 }
