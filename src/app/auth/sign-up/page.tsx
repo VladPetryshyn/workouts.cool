@@ -13,13 +13,16 @@ export default function SignUp() {
   const router = useRouter();
   const [errors, setErrors] = useState<AuthErrors>();
   const t = useTranslations("Authentication");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (formData: FormData) => {
+    setIsLoading(true);
     const r = await register({
       email: formData.get("email"),
       password: formData.get("password"),
       username: formData.get("username"),
     });
+    setIsLoading(false);
     if (r?.isError) {
       const { isError, ...errors } = r;
       setErrors(errors as AuthErrors);
@@ -31,9 +34,7 @@ export default function SignUp() {
 
   return (
     <>
-      <title>
-          {t("Join our community")}
-</title>
+      <title>{t("Join our community")}</title>
       <div className="auth-container">
         <h1 className="displayFontH2 auth-container-title">
           {t("Join our community")}
@@ -44,18 +45,21 @@ export default function SignUp() {
             name="username"
             type="text"
             error={errors?.username?.[0]}
+            disabled={isLoading}
           />
           <TextField
             placeholder={t("E-mail address")}
             name="email"
             type="email"
             error={errors?.email?.[0]}
+            disabled={isLoading}
           />
           <TextField
             placeholder={t("Password")}
             name="password"
             type="password"
             error={errors?.password?.[0]}
+            disabled={isLoading}
           />
           <FilledButton text={t("Register")} />
         </form>

@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import {
   BaseEditor,
   createEditor,
@@ -18,9 +18,14 @@ import {
 import "./styles.scss";
 import Image from "next/image";
 import { OutlinedButton } from "@/components/buttons/outlined";
-import { useRouter } from "next/navigation";
+import { LoadingModal } from "@/components/modal/loading";
+import { Tooltip } from "@/components/tooltip";
+import { NotificationsContext } from "@/components/notifications";
+import { NotificationTypes } from "@/components/notifications/reducer";
 
-const initialValue = [{ type: "paragraph", children: [{ text: "" }] }];
+const initialValue = JSON.stringify([
+  { type: "paragraph", children: [{ text: "" }] },
+]);
 const LIST_TYPES = ["numbered-list", "bulleted-list"];
 const TEXT_ALIGN_TYPES = ["left", "center", "right", "justify"];
 
@@ -34,9 +39,10 @@ interface Props {
 
 export default function ArticleEditor({ articleId, article }: Props) {
   const [id, setId] = useState(articleId);
-  const router = useRouter();
-  const [title, setTitle] = useState(article?.title ?? "New title");
-  const [slateValue, setSlateValue] = useState<string>(article?.content ?? "");
+  const [title, setTitle] = useState(article?.title ?? "");
+  const [slateValue, setSlateValue] = useState<string>(
+    article?.content ?? initialValue,
+  );
   const renderElement = useCallback(
     (props: RenderElementProps) => <Element {...props} />,
     [],
@@ -45,33 +51,67 @@ export default function ArticleEditor({ articleId, article }: Props) {
     (props: RenderLeafProps) => <Leaf {...props} />,
     [],
   );
+  const notifContext = useContext(NotificationsContext);
   const [editor] = useState(() => withReact(createEditor()));
+  const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState({ title: null, description: null });
+
   const onSubmit = async () => {
+    setIsLoading(true);
+    const body = JSON.stringify({
+      title: title,
+      content: slateValue,
+      articleId: id ?? undefined,
+    });
+
     if (!id) {
       const response = await fetch("/api/articles/create", {
         method: "POST",
-        body: JSON.stringify({ title, content: slateValue }),
+        body,
       });
       const newArticle = await response.json();
 
-      if (newArticle?._id) {
+      if (response.ok && newArticle?._id) {
         setId(newArticle?._id);
         window.history.pushState(
           {},
           "",
           `${window.location.pathname}/${newArticle?._id}`,
         );
+        notifContext.pushNotification(
+          "Succssfully created new article",
+          NotificationTypes.SUCCESS,
+        );
+        setErrors({ title: null, description: null });
+      } else {
+        setErrors({
+          title: newArticle.title?.[0],
+          description: newArticle.contentPreview?.[0],
+        });
       }
     } else {
       const response = await fetch("/api/articles/update", {
         method: "PUT",
-        body: JSON.stringify({
-          title,
-          content: slateValue,
-          articleId: articleId,
-        }),
+        body,
       });
+
+      if (response.ok) {
+        setErrors({ title: null, description: null });
+        notifContext.pushNotification(
+          "Succssfully updated article",
+          NotificationTypes.SUCCESS,
+        );
+      } else {
+        const errors = await response.json();
+
+        setErrors({
+          title: errors.title?.[0],
+          description: errors.contentPreview?.[0],
+        });
+      }
     }
+
+    setIsLoading(false);
   };
 
   return (
@@ -82,39 +122,55 @@ export default function ArticleEditor({ articleId, article }: Props) {
           className="displayFontH1 article-editor-title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          placeholder="New Title"
         />
-        <Slate
-          editor={editor}
-          initialValue={slateValue ? JSON.parse(slateValue) : initialValue}
-          onChange={(value) => {
-            const isAstChange = editor.operations.some(
-              (op) => "set_selection" !== op.type,
-            );
-            if (isAstChange) {
-              // Save the value to Local Storage.
-              const content = JSON.stringify(value);
-              setSlateValue(content);
-            }
-          }}
-        >
-          <div className="article-editor-container-toolbar">
-            <BlockButton format="h1" />
-            <BlockButton format="h2" />
-            <BlockButton format="numbered-list" />
-            <BlockButton format="bulleted-list" />
-            <BlockButton format="left" />
-            <BlockButton format="center" />
-            <BlockButton format="right" />
-            <MarkButton format="bold" />
-            <MarkButton format="italic" />
-            <MarkButton format="underline" />
-          </div>
-          <Editable
-            renderElement={renderElement}
-            renderLeaf={renderLeaf}
-            className="article-editor-container-editor"
-          />
-        </Slate>
+        {errors.title && (
+          <span className="article-editor-title-error">{errors.title}</span>
+        )}
+        <div className="article-editor-description">
+          <Slate
+            editor={editor}
+            initialValue={JSON.parse(slateValue)}
+            onChange={(value) => {
+              const isAstChange = editor.operations.some(
+                (op) => "set_selection" !== op.type,
+              );
+              if (isAstChange) {
+                // Save the value to Local Storage.
+                const content = JSON.stringify(value);
+                setSlateValue(content);
+              }
+            }}
+          >
+            <div className="article-editor-container-toolbar">
+              {errors.description && (
+                <div className="article-editor-container-toolbar-error">
+                  <Tooltip
+                    text={errors.description}
+                    className="article-editor-container-toolbar-error-tooltip"
+                  >
+                    <Image width={40} height={40} src="/info.svg" alt="Info" />
+                  </Tooltip>
+                </div>
+              )}
+              <BlockButton format="h1" />
+              <BlockButton format="h2" />
+              <BlockButton format="numbered-list" />
+              <BlockButton format="bulleted-list" />
+              <BlockButton format="left" />
+              <BlockButton format="center" />
+              <BlockButton format="right" />
+              <MarkButton format="bold" />
+              <MarkButton format="italic" />
+              <MarkButton format="underline" />
+            </div>
+            <Editable
+              renderElement={renderElement}
+              renderLeaf={renderLeaf}
+              className="article-editor-container-editor"
+            />
+          </Slate>
+        </div>
 
         <OutlinedButton
           text="Save article"
@@ -122,11 +178,12 @@ export default function ArticleEditor({ articleId, article }: Props) {
           className="article-editor-container-save-btn"
         />
       </div>
+      {isLoading && <LoadingModal />}
     </>
   );
 }
 
-const BlockButton = ({ format }) => {
+const BlockButton = ({ format }: any) => {
   const editor = useSlate();
   return (
     <button
@@ -154,7 +211,7 @@ const BlockButton = ({ format }) => {
   );
 };
 
-const MarkButton = ({ format }) => {
+const MarkButton = ({ format }: any) => {
   const editor = useSlate();
   return (
     <button
@@ -174,7 +231,7 @@ const MarkButton = ({ format }) => {
     </button>
   );
 };
-const isBlockActive = (editor: BaseEditor, format: any, blockType = "type") => {
+const isBlockActive = (editor: BaseEditor, format: any, blockType: any) => {
   const { selection } = editor;
   if (!selection) return false;
 
@@ -184,6 +241,7 @@ const isBlockActive = (editor: BaseEditor, format: any, blockType = "type") => {
       match: (n) =>
         !Editor.isEditor(n) &&
         SlateElement.isElement(n) &&
+        // @ts-ignore
         n[blockType] === format,
     }),
   );
@@ -200,20 +258,27 @@ const toggleBlock = (editor: BaseEditor, format: any) => {
   const isList = LIST_TYPES.includes(format);
 
   Transforms.unwrapNodes(editor, {
-    match: (n) =>
-      !Editor.isEditor(n) &&
-      SlateElement.isElement(n) &&
-      LIST_TYPES.includes(n.type) &&
-      !TEXT_ALIGN_TYPES.includes(format),
+    match: (node) => {
+      const n = node as any;
+      return (
+        !Editor.isEditor(n) &&
+        SlateElement.isElement(n) &&
+        // @ts-ignore
+        LIST_TYPES.includes(n.type) &&
+        !TEXT_ALIGN_TYPES.includes(format)
+      );
+    },
     split: true,
   });
   let newProperties: Partial<SlateElement>;
   if (TEXT_ALIGN_TYPES.includes(format)) {
     newProperties = {
+      // @ts-ignore
       align: isActive ? undefined : format,
     };
   } else {
     newProperties = {
+      // @ts-ignore
       type: isActive ? "paragraph" : isList ? "list-item" : format,
     };
   }
@@ -267,12 +332,13 @@ const Element = ({ attributes, children, element }: any) => {
   }
 };
 
-const isMarkActive = (editor: BaseEditor, format) => {
+const isMarkActive = (editor: BaseEditor, format: any) => {
   const marks = Editor.marks(editor);
+  // @ts-ignore
   return marks ? marks[format] === true : false;
 };
 
-const toggleMark = (editor: BaseEditor, format) => {
+const toggleMark = (editor: BaseEditor, format: any) => {
   const isActive = isMarkActive(editor, format);
 
   if (isActive) {

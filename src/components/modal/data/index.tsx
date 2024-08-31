@@ -7,7 +7,7 @@ import { FC } from "react";
 interface Props {
   onCancel: () => void;
   onConfirm: () => void;
-  iconPath: string;
+  iconPath?: string;
   title: string;
   subtitle: string;
 }
@@ -30,7 +30,7 @@ export const DataModal: FC<Props> = ({
         </>
       }
     >
-      <Image width={80} height={80} src={iconPath ?? "/trash.svg"} />
+      <Image width={80} height={80} src={iconPath ?? "/trash.svg"} alt="Info Icon" />
       <h2 className="displayFontH2">{title}</h2>
       <p>{subtitle}</p>
     </ModalContainer>

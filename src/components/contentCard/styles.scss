@@ -16,6 +16,8 @@
       --ln-height: 20px;
       line-height: var(--ln-height);
       max-height: calc(var(--ln-height) * 4);
+      word-break: break-all;
+      white-space: pre-line;
       overflow: hidden;
       position: relative;
       margin-top: 10px;
@@ -39,4 +41,18 @@
       }
     }
   }
+}
+
+.card-shimmer-title {
+  max-height: 40px;
+  max-width: 90%;
+}
+
+.card-shimmer-description {
+  width: 70%;
+}
+
+.card-shimmer-link {
+  max-height: 20px;
+  max-width: 130px;
 }

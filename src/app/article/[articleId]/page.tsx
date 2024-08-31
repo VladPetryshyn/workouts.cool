@@ -7,8 +7,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { isMobileDevice } from "@/lib/user-agent";
 import { richTextToHtml } from "@/lib/rich-text2html";
-import { CardDeleteButton } from "@/components/delete/deleteArticle";
 import { DeleteArticleArticlePage } from "./delete";
+import { ProfileInfo } from "@/components/profileItem";
 
 interface Props {
   params: {
@@ -19,7 +19,8 @@ interface Props {
 export default async function ArticleId({ params: { articleId } }: Props) {
   const session = await getServerSession(authOptions);
   const article = await getArticle(articleId);
-  const isOwner = article.author.toString() === session?.user?.id;
+  const authorId = article.author._id.toString();
+  const isOwner = authorId === session?.user?.id;
   const isMobile = await isMobileDevice();
   if (!article) redirect("/404");
   if (article.hidden && !isOwner) redirect("/404");
@@ -33,13 +34,18 @@ export default async function ArticleId({ params: { articleId } }: Props) {
             {article.title}
             {isOwner && !isMobile && (
               <Link href={`/article-editor/${article.id}`}>
-                <Image width={40} height={40} src="/pencil.svg" />
+                <Image width={40} height={40} src="/pencil.svg" alt="Edit icon" />
               </Link>
             )}
             {isOwner && (
               <DeleteArticleArticlePage title={article.title} id={article.id} />
             )}
           </h1>
+          <ProfileInfo
+            username={article?.author?.username}
+            profileId={authorId}
+            image={article?.author?.image}
+          />
         </div>
         <div className="article-view-body-content">
           {richTextToHtml(article.content)}

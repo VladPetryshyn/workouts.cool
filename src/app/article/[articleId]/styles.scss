@@ -12,12 +12,19 @@
   }
   &-header {
     display: flex;
-    margin-bottom: 30px;
+    flex-direction: column;
+    margin-bottom: 20px;
     h1 {
       color: var(--primary);
       img {
         margin-left: 10px;
       }
     }
+    .header-nav-profile {
+      margin-top: 10px;
+    }
+  }
+  &-content {
+    word-break: break-all;
   }
 }

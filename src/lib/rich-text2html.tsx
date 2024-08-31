@@ -37,7 +37,7 @@ const converter = (itm: item) => {
     default:
       return (
         <span
-          align={itm?.align ?? "left"}
+          style={{ textAlign: itm?.align ?? "left" }}
           className={`${itm.italic && "rt-italic"} ${itm.bold && "rt-bold"} ${itm.underline && "rt-underline"}`}
         >
           {itm.text}

@@ -6,6 +6,7 @@ import Article from "@/models/Articles";
 import { revalidateTag } from "next/cache";
 import { createArticleForEditTag, createProfileTag } from "@/lib/fetching";
 import { makeContentPreview } from "@/lib/rich-text2html";
+import { articleValidationScheme } from "../validation";
 
 export interface ArticleUpdate {
   title: string;
@@ -18,18 +19,36 @@ export async function PUT(req: NextRequest) {
   if (session) {
     try {
       const { title, content, articleId } = (await req.json()) as ArticleUpdate;
-      connectDB();
 
-      await Article.updateOne(
-        { _id: articleId, author: session.user.id },
-        { title, content, contentPreview: makeContentPreview(JSON.parse(content)) },
-      );
+      const validationObj = {
+        title,
+        contentPreview: makeContentPreview(JSON.parse(content)),
+      };
+      const result =
+        await articleValidationScheme.safeParseAsync(validationObj);
 
-      revalidateTag(createProfileTag(session?.user?.id));
-      revalidateTag(createArticleForEditTag(articleId));
-      return NextResponse.json({ status: "success" });
+      if (result.success) {
+        connectDB();
+
+        await Article.updateOne(
+          { _id: articleId, author: session.user.id },
+          {
+            title,
+            content,
+            contentPreview: makeContentPreview(JSON.parse(content)),
+          },
+        );
+
+        revalidateTag(createProfileTag(session?.user?.id));
+        revalidateTag(createArticleForEditTag(articleId));
+        return NextResponse.json({ status: "success" });
+      } else {
+        return NextResponse.json(result?.error?.formErrors?.fieldErrors, {
+          status: 403,
+        });
+      }
     } catch (e) {
-      console.log(e);
+      return NextResponse.json(e, { status: 500 });
     }
   }
 }

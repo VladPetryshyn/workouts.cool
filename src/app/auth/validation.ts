@@ -10,7 +10,7 @@ export const signInScheme = z
 export const signUpScheme = signInScheme
   .merge(
     z.object({
-      username: z.string().min(3).max(30),
+      username: z.string().min(4).max(30),
     }),
   )
   .required();

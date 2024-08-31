@@ -3,16 +3,21 @@
   flex-direction: column;
   margin: 0 60px;
   padding-bottom: 100px;
-.article-editor-title {
-  background: transparent;
-  border: none;
-  color: var(--primary);
-  align-self: center;
-  text-align: center;
-  margin-bottom: 40px;
-  margin-top: 100px;
-  width: 100%;
-}
+  .article-editor-title {
+    background: transparent;
+    border: none;
+    color: var(--primary);
+    align-self: center;
+    text-align: center;
+    margin-bottom: 20px;
+    margin-top: 100px;
+    width: 100%;
+    &-error {
+      color: var(--error);
+      text-align: center;
+      margin-bottom: 20px;
+    }
+  }
   @media (min-width: 1080px) {
     margin: 0 140px;
   }
@@ -31,9 +36,20 @@
     top: 0;
     padding-right: 0px;
     z-index: 2;
-    position: sticky;
     display: flex;
     overflow-x: auto;
+
+    &-error {
+      position: absolute;
+      left: 70px;
+      &-tooltip {
+        .tooltip-content {
+          max-width: 300px;
+          width: 300px;
+        }
+      }
+    }
+
     button {
       border: none;
       margin-right: 30px;

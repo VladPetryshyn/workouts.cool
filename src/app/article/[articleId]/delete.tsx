@@ -12,9 +12,11 @@ interface Props {
 
 export const DeleteArticleArticlePage: FC<Props> = ({ title, id }) => {
   const router = useRouter();
+
   const onDelete = () => {
     router.replace("/articles");
   };
+
   return (
     <CardDeleteButton title={title} id={id} size={40} onDelete={onDelete} />
   );

@@ -7,9 +7,9 @@ interface Time {
   millis: number;
 }
 
-const timeGeneration = (multiplier: number) => {
+const timeGeneration = (multiplier: number, startFrom = 0) => {
   const arr: Array<Time> = [];
-  for (let i = 0; i <= 60; i++) {
+  for (let i = startFrom; i <= 60; i++) {
     if (i < 10) {
       arr.push({ title: `0${i}`, millis: multiplier * i });
       continue;
@@ -20,14 +20,14 @@ const timeGeneration = (multiplier: number) => {
   return arr;
 };
 const minTime = timeGeneration(60000);
-const secTime = timeGeneration(1000);
+const secTime = timeGeneration(1000, 30);
 
 interface Props {
   onHide: () => void;
   selectedMins?: number;
   selectedSecs?: number;
-  updateMins: (time: number) =>  void;
-  updateSecs: (time: number) =>  void;
+  updateMins: (time: number) => void;
+  updateSecs: (time: number) => void;
 }
 
 export const TimeSelect: FC<Props> = (props) => {

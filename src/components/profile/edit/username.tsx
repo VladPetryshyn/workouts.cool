@@ -1,11 +1,13 @@
 "use client";
 import { updateUsername } from "@/actions/updateUsername";
 import { EditModal } from "@/components/modal/edit";
+import { NotificationsContext } from "@/components/notifications";
+import { NotificationTypes } from "@/components/notifications/reducer";
 import { TextField } from "@/components/textfields/textfield";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { FC, useRef, useState } from "react";
+import { FC, useContext, useRef, useState } from "react";
 
 interface Props {
   username: string;
@@ -17,17 +19,26 @@ export const EditUsername: FC<Props> = ({ username, userId }) => {
   const router = useRouter();
   const input = useRef<HTMLInputElement>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [error, setError] = useState<string>("");
+  const context = useContext(NotificationsContext);
+
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
   const onSubmit = async () => {
     const value = input.current?.value;
     if (value) {
-      const isOk = await updateUsername(value, userId);
-      if (isOk) {
+      const msg = await updateUsername(value, userId);
+      if (msg === "") {
         router.refresh();
-        session.update({username: value});
+        session.update({ username: value });
+        context.pushNotification(
+          "Username was successfully changed",
+          NotificationTypes.SUCCESS,
+        );
         closeModal();
+      } else {
+        setError(msg);
       }
     }
   };
@@ -52,6 +63,7 @@ export const EditUsername: FC<Props> = ({ username, userId }) => {
             placeholder="username"
             defaultValue={username}
             ref={input}
+            error={error}
           />
         </EditModal>
       )}

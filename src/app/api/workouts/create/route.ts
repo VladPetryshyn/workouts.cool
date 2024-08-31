@@ -4,35 +4,42 @@ import User from "@/models/User";
 import Workout, { WorkoutDocument } from "@/models/Workout";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
+import { createExerciseData } from "../meta";
+import { validateWorkout } from "../validation";
 
 export const POST = async (req: NextRequest) => {
   try {
     const session = await getServerSession(authOptions);
     if (session?.user) {
-      await connectDB();
-
-      const author = await User.findById(session.user.id);
-      if (!author) return NextResponse.json({}, { status: 404 });
-
       const data = (await req.json()) as WorkoutDocument;
-      console.log(data, "data");
-      const newWorkout = new Workout({
-        ...data,
+      const validationObj = {
+        title: data.title,
         steps: data.steps,
-        author: {
-          _id: author._id,
-          email: author.email,
-          password: author.password,
-          username: author.username,
-          articles: author.articles,
-          workouts: author.workouts,
-        },
-      });
+      };
+      const result = await validateWorkout(validationObj);
 
-      const savedWorkout = await newWorkout.save();
-      author.workouts.push(savedWorkout);
+      if (result.success) {
+        await connectDB();
 
-      return NextResponse.json(savedWorkout);
+        const author = await User.findById(session.user.id);
+        if (!author) return NextResponse.json({}, { status: 404 });
+
+        const newWorkout = new Workout({
+          ...data,
+          steps: data.steps,
+          ...createExerciseData(data.steps),
+          author: author._id,
+        });
+
+        const savedWorkout = await newWorkout.save();
+        author.workouts.push(savedWorkout);
+
+        return NextResponse.json(savedWorkout);
+      } else {
+        return NextResponse.json(result, {
+          status: 403,
+        });
+      }
     }
   } catch (e) {
     return NextResponse.json(e, { status: 505 });

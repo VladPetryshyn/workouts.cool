@@ -12,9 +12,11 @@ import { useTranslations } from "next-intl";
 export default function SignIn() {
   const router = useRouter();
   const [errors, setErrors] = useState<AuthErrors>({});
+  const [isLoading, setIsLoading] = useState(false);
   const t = useTranslations("Authentication");
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    setIsLoading(true);
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const res = await signIn("credentials", {
@@ -28,6 +30,7 @@ export default function SignIn() {
     if (res?.ok) {
       return router.push("/");
     }
+    setIsLoading(false);
   };
 
   return (
@@ -43,14 +46,16 @@ export default function SignIn() {
             type="email"
             name="email"
             error={errors.email?.[0]}
+            disabled={isLoading}
           />
           <TextField
             placeholder={t("Password")}
             type="password"
             name="password"
             error={errors.password?.[0]}
+            disabled={isLoading}
           />
-          <FilledButton text={t("Log In")} />
+          <FilledButton text={t("Log In")} disabled={isLoading} />
         </form>
         <Link href="/auth/sign-up">
           {t("Don't have an account? Join now!")}

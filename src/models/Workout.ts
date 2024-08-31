@@ -7,6 +7,7 @@ export interface WorkoutItem {
   description: string;
   minTime: number;
   secTime: number;
+  totalTime: number;
 }
 
 export interface WorkoutDocument {
@@ -14,6 +15,8 @@ export interface WorkoutDocument {
   author: UserDocument;
   title: string;
   steps: Array<WorkoutItem>;
+  timeNeeded: number;
+  exerciseAmount: number;
 }
 
 const StepSchema = new Schema<WorkoutItem>(
@@ -23,6 +26,7 @@ const StepSchema = new Schema<WorkoutItem>(
     description: String,
     minTime: Number,
     secTime: Number,
+    totalTime: Number,
   },
   { _id: false },
 );
@@ -40,6 +44,14 @@ const WorkoutSchema = new Schema<WorkoutDocument>(
       required: true,
     },
     steps: [StepSchema],
+    exerciseAmount: {
+      type: Number,
+      required: true,
+    },
+    timeNeeded: {
+      type: Number,
+      required: true,
+    },
   },
   { timestamps: true },
 );

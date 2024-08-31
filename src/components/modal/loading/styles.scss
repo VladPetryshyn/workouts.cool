@@ -1,0 +1,7 @@
+.loading-modal {
+  padding: 40px;
+  &-spinner {
+    transform: rotate(0deg);
+    animation: 2.3s infinite spin;
+  }
+}

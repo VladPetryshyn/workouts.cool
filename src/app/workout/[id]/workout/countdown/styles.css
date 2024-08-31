@@ -1,0 +1,10 @@
+.countdown {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.countdown > .displayFontH1 {
+  font-size: 80px;
+  color: var(--primary);
+}

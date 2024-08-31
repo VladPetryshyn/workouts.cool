@@ -16,6 +16,9 @@ export interface UserDocument {
 
 export const UserSchema = new Schema<UserDocument>(
   {
+    image: {
+      type: String,
+    },
     email: {
       type: String,
       //unique: true,

@@ -1,0 +1,17 @@
+.workout-results {
+  display: flex;
+  flex-direction: column;
+}
+
+.workout-results > div > .displayFontH1 {
+  text-transform: uppercase;
+  margin-bottom: 15px;
+}
+
+.workout-results > div > .result-item {
+  font-size: 25px;
+}
+
+.workout-results > a {
+  margin-top: 150px;
+}

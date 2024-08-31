@@ -7,7 +7,6 @@ export interface ArticleDocument {
   title: string;
   content: string;
   contentPreview: string;
-  hidden: boolean;
 }
 
 const ArticleSchema = new Schema<ArticleDocument>(
@@ -27,7 +26,6 @@ const ArticleSchema = new Schema<ArticleDocument>(
       required: [true, "Content is required"],
       minlength: [3, "Content must be at least 3 characters long"],
     },
-    hidden: Boolean,
     author: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

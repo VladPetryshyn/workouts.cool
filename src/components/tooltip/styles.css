@@ -1,0 +1,40 @@
+.tooltip-container {
+  cursor: pointer;
+  position: relative;
+  display: inline-flex;
+}
+
+.tooltip-content {
+  position: absolute;
+  display: none;
+  padding: 13px;
+  background: var(--cardSurfaceDark);
+  box-shadow: rgba(0, 0, 0) 0px 4px 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 150%;
+  max-width: 250px;
+  word-wrap: break-word;
+  z-index: 999999;
+
+  &:before {
+    content: "";
+    width: 0;
+    height: 0;
+    border-top: 7px solid transparent;
+    border-right: 14px solid var(--cardSurfaceDark);
+    border-bottom: 7px solid transparent;
+    position: absolute;
+    left: -13px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+.tooltip-body {
+  display: inline-block;
+}
+
+.tooltip-container:hover > .tooltip-content {
+  display: inline-block;
+}

@@ -1,0 +1,18 @@
+.notification-item {
+  padding: 10px;
+  background: var(--surfaceContainerBg);
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 4px 5px;
+  display: inline-block;
+  margin-top: 10px;
+
+  &-text {
+    text-align: center;
+  }
+
+  &.error-item {
+    background: var(--error);
+  }
+  &.success-item {
+    background: green;
+  }
+}

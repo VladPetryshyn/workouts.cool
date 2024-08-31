@@ -11,6 +11,9 @@ import {
   createWorkoutUrl,
 } from "@/lib/urlCreators";
 import { getArticles } from "@/actions/getArticles";
+import { timeFromMilis } from "@/lib/time";
+import Link from "next/link";
+import { FilledButton } from "@/components/buttons/filled";
 
 interface Props {
   params: {
@@ -37,8 +40,14 @@ export default async function Profile({ params, searchParams }: Props) {
     articles = await getArticles(params.id);
   }
 
+  const linkUrl = articles ? `/article-editor` : `/workout-editor`;
+  const isOwner = params.id === session?.user?.id;
+
   return (
     <section className="profile-content">
+      {isOwner && <Link href={linkUrl}>
+        <FilledButton text="Create new item" />
+      </Link>}
       {articles?.map(({ _id, title, author, contentPreview }) => (
         <ArticleCard
           key={_id}
@@ -47,18 +56,19 @@ export default async function Profile({ params, searchParams }: Props) {
           url={createArticleUrl(_id)}
           editURL={createArticleEditUrl(_id)}
           content={contentPreview}
-          isOwner={String(author) === session?.user?.id}
+          isOwner={isOwner}
         />
       ))}
-      {workouts?.map(({ _id, title, author }) => (
+      {workouts?.map(({ _id, title, author, timeNeeded, exerciseAmount }) => (
         <ArticleCard
           key={_id}
           id={_id}
           title={title}
           url={createWorkoutUrl(_id)}
           editURL={createWorkoutEditUrl(_id)}
-          content={""}
-          isOwner={String(author) === session?.user?.id}
+          content={`Time needed: ${timeFromMilis(timeNeeded)} \n
+Exercise Amount: ${exerciseAmount}`}
+          isOwner={isOwner}
           workout={true}
         />
       ))}

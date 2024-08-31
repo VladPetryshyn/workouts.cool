@@ -1,5 +1,3 @@
-import User from "@/models/User";
-import Article from "@/models/Articles";
 import mongoose from "mongoose";
 const { MONGODB_URI } = process.env;
 

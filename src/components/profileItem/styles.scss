@@ -1,0 +1,25 @@
+.header-nav-profile {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  & > img {
+    border-radius: 100%;
+    object-fit: cover;
+  }
+  &-desktop {
+    display: none;
+    @media (min-width: 760px) {
+      display: flex;
+    }
+  }
+  &-text {
+    margin-left: 10px;
+    p {
+      display: flex;
+      align-items: center;
+      span {
+        margin-right: 10px;
+      }
+    }
+  }
+}

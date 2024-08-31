@@ -2,6 +2,7 @@ import { ProfileCard } from "@/components/profile/card";
 import Link from "next/link";
 import "./styles.scss";
 import { createUrlBase } from "@/lib/urlCreators";
+import { createProfileTag } from "@/lib/fetching";
 
 interface Props {
   params: { id: string };
@@ -15,13 +16,17 @@ export default async function Profile({ params, searchParams }: Props) {
   const resp = await fetch(createUrlBase(`/api/profile/${params.id}`), {
     method: "GET",
     cache: "no-store",
-    // next: { tags: [profileTag] },
+    next: { tags: [createProfileTag(params.id)] },
   });
   const user = await resp.json();
 
   return (
     <section className="profile-container-profile-card">
-      <ProfileCard username={user?.username} id={String(user?._id)} />
+      <ProfileCard
+        username={user?.username}
+        id={String(user?._id)}
+        image={user?.image}
+      />
       <div className="profile-container-profile-card-switches">
         <Link
           className={`profile-container-profile-card-switches-button ${active === "articles" && "active"}`}

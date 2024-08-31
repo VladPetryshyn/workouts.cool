@@ -24,6 +24,7 @@ export const register = async (values: any) => {
       const user = new User({
         username,
         email,
+        image: "",
         password: hashedPassword,
       });
       const savedUser = await user.save();

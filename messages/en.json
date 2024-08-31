@@ -24,5 +24,23 @@
     "Register": "Register",
     "Already have an account? Log in!": "Already have an account? Log in!",
     "This email already exists": "This email already exists"
+  },
+  "UsernameChange": {
+    "this_username_is_already_taken": "This username is already taken!",
+    "username_must_be_at_least_4_characters_long": "Username must be at least 4 characters long",
+    "username_cant_be_more_than_20_characters_long": "Useranem can't be more than 20 characters long",
+    "server error": "Server Error"
+  },
+  "EditPhoto": {
+    "limit": "Max file size is 3mb.",
+    "error-reading": "Error occured while reading the file.",
+    "success": "Photo was successfully updated."
+  },
+  "workouts-and-articles-loading": {
+    "loading": "Loading..."
+  },
+  "validate-workout": {
+    "no-steps": "You can't create workout without items!",
+    "over-100-steps": "You can't create workout with more than 100 items!"
   }
 }

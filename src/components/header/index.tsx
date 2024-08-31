@@ -1,17 +1,33 @@
 "use client";
 import Image from "next/image";
-import { DH2 } from "../text/displayFonts/displayFont";
 import "./header.scss";
 import { useToggle } from "@/hooks/useToggle";
 import classNames from "classnames";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useSession } from "next-auth/react";
+import { ProfileInfo } from "../profileItem";
+import { usePathname } from "next/navigation";
+import { getPhoto } from "@/actions/getPhoto";
 
 export const Header = () => {
-  const [isClicked, toggleIsClicked] = useToggle();
+  const [isClicked, toggleIsClicked, setIsClicked] = useToggle();
   const session = useSession();
+  const path = usePathname();
+  const [profilePic, setProfilePic] = useState();
+
+  useEffect(() => {
+    setIsClicked(false);
+  }, [path]);
+
+  useEffect(() => {
+    if (session.data?.user) {
+      getPhoto(session.data.user.id).then((img) => {
+        setProfilePic(img);
+      });
+    }
+  }, [session]);
 
   useEffect(() => {
     if (isClicked) {
@@ -32,7 +48,7 @@ export const Header = () => {
     <header className="header">
       <div className={classNames("header-content", { hidden: !isClicked })}>
         <Link href="/hero-page">
-          <DH2 text="work" />
+          <h1 className="displayFontH1">work</h1>
         </Link>
         <Image
           src={isClicked ? "/close.svg" : "/menu.svg"}
@@ -48,32 +64,21 @@ export const Header = () => {
       >
         <nav className="header-nav">
           {isAuthenticated && (
-            <Link href={profileUrl} className="header-nav-profile">
-              <Image
-                width={60}
-                height={60}
-                src="/user.svg"
-                alt={t("profilePicture")}
-              />
-              <div className="header-nav-profile-text">
-                <h3>{session?.data?.user?.username}</h3>
-                <p>
-                  <span>view profile</span>
-                  <Image width={18} height={18} src="/arrow-right.svg" />
-                </p>
-              </div>
-            </Link>
+            <ProfileInfo
+              profileId={session?.data?.user?.id}
+              username={session?.data?.user?.username}
+              image={profilePic}
+            />
           )}
           <a href="/workouts">{t("workouts")}</a>
           <Link href="/articles">{t("articles")}</Link>
-          <a href="#">{t("about us")}</a>
           {isAuthenticated && (
             <Link href={profileUrl} className="header-nav-profile-desktop">
               <Image
                 width={50}
                 height={50}
-                src="/user.svg"
-                alt={t("profilePicture")}
+                src={profilePic || "/user.svg"}
+                alt={"Profile Picture"}
               />
             </Link>
           )}

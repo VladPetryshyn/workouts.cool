@@ -104,10 +104,15 @@
         display: none;
       }
       &-desktop {
+        & > img {
+          border-radius: 100%;
+          object-fit: cover;
+        }
+
         display: none;
-      @media (min-width: 760px) {
-        display: flex;
-      }
+        @media (min-width: 760px) {
+          display: flex;
+        }
       }
       &-text {
         margin-left: 10px;

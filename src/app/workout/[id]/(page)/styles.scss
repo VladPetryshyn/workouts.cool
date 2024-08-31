@@ -1,0 +1,53 @@
+.workout-preview {
+  &-header {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    h1 {
+      color: var(--primary);
+      img {
+        margin-left: 10px;
+      }
+    }
+    .header-nav-profile {
+      margin-top: 10px;
+    }
+  }
+  &-content {
+    display: flex;
+    margin-top: 120px;
+    .preview-card {
+      flex: 1;
+      @media (min-width: 760px) {
+        &-title {
+          margin-bottom: 28px;
+          img {
+            --size: 70px;
+            height: var(--size);
+            width: var(--size);
+          }
+          h3 {
+            margin-top: 10px;
+            font-size: 28px;
+          }
+        }
+        &-content {
+          font-size: 22px;
+        }
+      }
+
+      &:first-child {
+        margin-right: 20px;
+      }
+    }
+
+    @media (min-width: 1080px) {
+      margin: 120px 100px;
+    }
+  }
+  &-start {
+    margin-top: 60px;
+    display: flex;
+    justify-content: center;
+  }
+}

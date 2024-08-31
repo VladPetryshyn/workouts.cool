@@ -1,0 +1,42 @@
+.content-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.content-container-buttons {
+  justify-self: flex-end;
+  margin-top: 200px;
+}
+
+.content-container-buttons > button:first-child {
+  margin-right: 20px;
+}
+
+.content-container-content {
+  align-self: center;
+}
+
+.content-container-time {
+  font-size: 80px;
+}
+
+.content-container-title {
+  font-size: 50px;
+  margin-bottom: 10px;
+}
+
+.content-container-description {
+  font-size: 25px;
+  margin-bottom: 30px;
+}
+
+.content-center {
+  text-align: center;
+}
+
+.content-container-position {
+  font-size: 30px;
+  margin-bottom: 60px;
+}

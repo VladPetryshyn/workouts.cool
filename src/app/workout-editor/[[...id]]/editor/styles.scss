@@ -12,13 +12,25 @@
     }
   }
 
+  .workout-editor-error {
+    color: var(--error);
+    text-align: center;
+    margin-bottom: 20px;
+    margin-top: 10px;
+  }
+  .tooltip-expanded {
+    .tooltip-content {
+      max-width: 300px;
+      width: 300px;
+    }
+  }
   .workout-editor-title {
     background: transparent;
     border: none;
     color: var(--primary);
     align-self: center;
     text-align: center;
-    margin-bottom: 60px;
+    margin-bottom: 10px;
     width: 100%;
   }
   &-save-btn {
@@ -35,7 +47,6 @@
 
     &-btn {
       align-self: center;
-      outline: none;
       border: none;
       &.has-content {
         margin-top: 40px;
@@ -57,6 +68,9 @@
         &-title {
           display: flex;
           align-items: center;
+          &-tooltip {
+            margin-left: 10px;
+          }
           h2 {
             white-space: nowrap;
             min-width: 100px;
@@ -88,13 +102,14 @@
             display: flex;
             .time-value {
               margin-left: 5px;
-              color: #5C5C5C;
+              color: #5c5c5c;
             }
           }
         }
         &-p {
           margin-top: 20px;
           word-break: break-all;
+          outline: none;
           @media (min-width: 760px) {
             width: 450px;
             @media (min-width: 1080px) {

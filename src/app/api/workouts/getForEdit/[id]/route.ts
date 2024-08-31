@@ -14,7 +14,7 @@ export const GET = async (
       _id: params.id,
       author: session.user.id,
     }).select("-author");
-    console.log(workout);
+
     return NextResponse.json(workout);
   } catch (e) {
     return NextResponse.json(e, { status: 500 });

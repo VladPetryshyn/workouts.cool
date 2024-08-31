@@ -5,6 +5,7 @@ import { FC } from "react";
 import Image from "next/image";
 import { OutlinedButton } from "../buttons/outlined";
 import { EditUsername } from "./edit/username";
+import { EditPhoto } from "./edit/photo";
 
 interface Props {
   username: string;
@@ -23,14 +24,10 @@ export const ProfileCard: FC<Props> = ({ username, id, image, className }) => {
         <Image
           width={90}
           height={90}
-          src={image ?? "/user.svg"}
+          src={image || "/user.svg"}
           alt="User Profile Image"
         />
-        {isOwner && (
-          <button className="profile-card-img-upload">
-            <Image src="/image-upload.svg" width={25} height={25} />
-          </button>
-        )}
+        {isOwner && <EditPhoto userId={id} />}
       </div>
       <h2>
         {`${username} `}
@@ -39,7 +36,7 @@ export const ProfileCard: FC<Props> = ({ username, id, image, className }) => {
       {isOwner && (
         <OutlinedButton
           text="Logout"
-          onClick={signOut}
+          onClick={() => signOut()}
           className="profile-card-logout"
         />
       )}
