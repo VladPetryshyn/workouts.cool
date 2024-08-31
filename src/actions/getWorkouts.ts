@@ -4,6 +4,7 @@ import User from "@/models/User";
 import Workout, { WorkoutDocument } from "@/models/Workout";
 
 export const getWorkouts = async (author?: string) => {
+  try {
   await connectDB();
   if (author) {
     const auth = await User.findById(author);
@@ -18,4 +19,7 @@ export const getWorkouts = async (author?: string) => {
   });
 
   return workouts as Array<WorkoutDocument>;
+  } catch {
+    return [];
+  }
 };

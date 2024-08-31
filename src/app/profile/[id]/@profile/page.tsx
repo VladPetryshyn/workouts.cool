@@ -3,6 +3,7 @@ import Link from "next/link";
 import "./styles.scss";
 import { createProfileTag } from "@/lib/fetching";
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 interface Props {
   params: { id: string };
@@ -21,6 +22,8 @@ export default async function Profile({ params, searchParams }: Props) {
     cache: "no-store",
     next: { tags: [createProfileTag(params.id)] },
   });
+
+  if (resp.status === 404 || resp.status === 500) return redirect(`${url}/404`);
   const user = await resp.json();
 
   return (

@@ -1,19 +1,22 @@
 import { connectDB } from "@/lib/mongodb";
 import Article from "@/models/Articles";
 import User from "@/models/User";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import mongoose from "mongoose";
 
-export async function GET(_: Request, { params }: { params: { id: string } }) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } },
+) {
   try {
     await connectDB();
-    const user = await User.findById(params.id)
+    const user = await User.findById(new mongoose.Types.ObjectId(params.id))
       .select(["-password", "-email"])
       .lean();
 
     if (user) return NextResponse.json(user, { status: 200 });
     return NextResponse.json({}, { status: 404 });
   } catch (err) {
-    console.log(err);
     return NextResponse.json(err, { status: 500 });
   }
 }

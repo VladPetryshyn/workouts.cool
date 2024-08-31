@@ -3,13 +3,14 @@ import { ArticleCard } from "@/components/contentCard";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { createArticleEditUrl, createArticleUrl } from "@/lib/urlCreators";
+import { Fragment } from "react";
 
 export default async function ArticlesPage() {
   const articles = await getArticles();
   const session = await getServerSession(authOptions);
 
   return (
-    <>
+    <Fragment>
       <title>Articles</title>
       <div className="content-body">
         <h1 className="displayFontH1">Articles</h1>
@@ -27,6 +28,6 @@ export default async function ArticlesPage() {
           ))}
         </div>
       </div>
-    </>
+    </Fragment>
   );
 }
