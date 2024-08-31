@@ -9,7 +9,6 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { createWorkoutForEditTag } from "@/lib/fetching";
 import WorkoutEditor from "./editor/editor";
-import { createUrlBase } from "@/lib/urlCreators";
 
 interface Props {
   params: {
@@ -18,24 +17,25 @@ interface Props {
 }
 
 export default async function WorkoutEditorPage({ params }: Props) {
+  const headerList = headers();
+  const url = headerList.get("x-url");
+
   const workoutId = params.id?.[0];
   const isMobile = await isMobileDevice();
   let workout = null;
-  if (workoutId && !isMobile) {
-    const resp = await fetch(
-      createUrlBase(`/api/workouts/getForEdit/${workoutId}`),
-      {
-        headers: headers(),
-        next: {
-          tags: [createWorkoutForEditTag(workoutId)],
-        },
+
+  if (url && workoutId && !isMobile) {
+    const resp = await fetch(`${url}api/workouts/getForEdit/${workoutId}`, {
+      method: "GET",
+      headers: headers(),
+      next: {
+        tags: [createWorkoutForEditTag(workoutId)],
       },
-    );
+    });
     workout = await resp.json();
     if (!workout && workoutId) redirect("/404");
   }
 
-  console.log(workout);
   return (
     <>
       <title>Workout Editor</title>

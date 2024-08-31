@@ -1,6 +1,5 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { createUrlBase } from "./lib/urlCreators";
 import { JWT } from "next-auth/jwt";
 
 interface sessionMiddleware {
@@ -9,22 +8,30 @@ interface sessionMiddleware {
 }
 
 export async function middleware(request: NextRequest) {
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-url", new URL("/", request.url).toString());
   const pathname = request.nextUrl.pathname;
-  const response = await getSessionInMiddleware();
+  const successfulResponse = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
+  if (pathname.startsWith("/profile")) return successfulResponse;
+
+  const response = await getSessionInMiddleware(request);
 
   // redirect for the home page
   if (pathname === "/") {
     if (response.user)
       return NextResponse.redirect(
-        createUrlBase(`/profile/${response.user.id}`),
+        new URL(`/profile/${response.user.id}`, request.url),
       );
 
-    return NextResponse.redirect(createUrlBase("/hero-page"));
+    return NextResponse.redirect(new URL("/hero-page", request.url));
   }
 
   // if we have user, then response will be always successfull
-  if (response.success) return;
-
+  if (response.success) return successfulResponse;
   // redirect to the unathorized ui
   if (
     pathname.startsWith("/workout-editor") ||
@@ -33,7 +40,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/unathorized", request.url));
   }
 
-  // responsd with unathorized for the api routes
   return new Response("Unauthorized", { status: 401 });
 }
 
@@ -46,10 +52,11 @@ export const config = {
     "/api/workouts/update",
     "/api/articles/create",
     "/api/articles/update",
+    "/profile/:id*",
   ],
 };
 
-async function getSessionInMiddleware() {
+async function getSessionInMiddleware(request: NextRequest) {
   const output: sessionMiddleware = { user: undefined, success: false };
   const c = cookies();
   const allCookies = c
@@ -77,7 +84,7 @@ async function getSessionInMiddleware() {
    * Send a request to /api/auth/session to get the user session
    * process.LOOPBACK_URL can be set as localhost, or your website url
    */
-  const url = createUrlBase("/api/auth/session");
+  const url = new URL("/api/auth/session", request.url);
   const response = await fetch(url, {
     headers,
     cache: "no-store",

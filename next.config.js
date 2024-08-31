@@ -19,9 +19,6 @@ const config = withPWA(
         bodySizeLimit: "5mb",
       },
     },
-    env: {
-      HOSTING_URL: process.env.HOSTING_URL,
-    },
     sassOptions: {
       includePaths: [path.join(__dirname, "styles")],
     },

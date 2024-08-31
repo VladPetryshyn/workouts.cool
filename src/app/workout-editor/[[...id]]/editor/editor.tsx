@@ -22,7 +22,6 @@ import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import { OutlinedButton } from "@/components/buttons/outlined";
 import { TimeSelect } from "./time-select";
 import { WorkoutDocument, WorkoutItem } from "@/models/Workout";
-import { createUrlBase } from "@/lib/urlCreators";
 import { LoadingModal } from "@/components/modal/loading";
 import { ValidationErrors } from "@/app/api/workouts/validation";
 import { Tooltip } from "@/components/tooltip";

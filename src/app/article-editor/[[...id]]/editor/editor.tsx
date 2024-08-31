@@ -174,7 +174,7 @@ export default function ArticleEditor({ articleId, article }: Props) {
 
         <OutlinedButton
           text="Save article"
-          onClick={() => onSubmit()}
+          onClick={onSubmit}
           className="article-editor-container-save-btn"
         />
       </div>

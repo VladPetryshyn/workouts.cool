@@ -6,7 +6,6 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { createArticleForEditTag } from "@/lib/fetching";
 import ArticleEditor from "./editor/editor";
-import { createUrlBase } from "@/lib/urlCreators";
 
 interface Props {
   params: {
@@ -15,19 +14,20 @@ interface Props {
 }
 
 export default async function ArticlesEditorPage({ params }: Props) {
+  const headerList = headers();
+  const url = headerList.get("x-url");
+
   const articleId = params.id?.[0];
   const isMobile = await isMobileDevice();
   let article = null;
-  if (articleId && !isMobile) {
-    const resp = await fetch(
-      createUrlBase(`/api/articles/getForEdit/${articleId}`),
-      {
-        headers: headers(),
-        next: {
-          tags: [createArticleForEditTag(articleId)],
-        },
+  if (url && articleId && !isMobile) {
+    const resp = await fetch(`${url}api/articles/getForEdit/${articleId}`, {
+      method: "GET",
+      headers: headerList,
+      next: {
+        tags: [createArticleForEditTag(articleId)],
       },
-    );
+    });
     article = await resp.json();
     if (!article && articleId) redirect("/404");
   }

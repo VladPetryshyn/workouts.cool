@@ -1,8 +1,8 @@
 import { ProfileCard } from "@/components/profile/card";
 import Link from "next/link";
 import "./styles.scss";
-import { createUrlBase } from "@/lib/urlCreators";
 import { createProfileTag } from "@/lib/fetching";
+import { headers } from "next/headers";
 
 interface Props {
   params: { id: string };
@@ -13,7 +13,10 @@ interface Props {
 
 export default async function Profile({ params, searchParams }: Props) {
   const active = searchParams.content ?? "articles";
-  const resp = await fetch(createUrlBase(`/api/profile/${params.id}`), {
+  const headerList = headers();
+  const url = headerList.get("x-url");
+
+  const resp = await fetch(`${url}/api/profile/${params.id}`, {
     method: "GET",
     cache: "no-store",
     next: { tags: [createProfileTag(params.id)] },

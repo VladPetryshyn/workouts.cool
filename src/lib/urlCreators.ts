@@ -5,6 +5,3 @@ export const createArticleEditUrl = (articleId: string) =>
 export const createWorkoutUrl = (articleId: string) => `/workout/${articleId}`;
 export const createWorkoutEditUrl = (articleId: string) =>
   `/workout-editor/${articleId}`;
-
-export const createUrlBase = (url: string) => 
- `${process.env.HOSTING_URL}${url}`;
