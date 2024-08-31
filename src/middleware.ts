@@ -69,7 +69,11 @@ async function getSessionInMiddleware(request: NextRequest) {
    * (!) IMPORTANT NOTE HERE:
    * next-auth likes to use different cookie name for prod (https) so make sure to set a consistent cookie name in your next-auth configuration file (see docs)
    */
-  const sessionToken = c.get("next-auth.session-token")?.value?.trim();
+  const tokenKey =
+    process.env.NODE_ENV === "development"
+      ? "next-auth.session-token"
+      : "__Secure-next-auth.session-token";
+  const sessionToken = c.get(tokenKey)?.value?.trim();
 
   if (!sessionToken) {
     return output;
