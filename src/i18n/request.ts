@@ -11,9 +11,9 @@ export default getRequestConfig(async () => {
   //const defaultLocale = headersList.get("accept-language");
   //const locale = cookies().get("NEXT_LOCALE")?.value || defaultLocale || "en";
 
-  const locale = 'en';
+  const locale = "en";
   return {
     locale,
-    messages: (await import(`../messages/${locale}.json`)).default,
+    messages: (await import(`../../messages/${locale}.json`)).default,
   };
 });

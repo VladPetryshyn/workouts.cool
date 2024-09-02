@@ -8,6 +8,7 @@ import { FormEvent, useState } from "react";
 import { signIn } from "next-auth/react";
 import { AuthErrors } from "../types";
 import { useTranslations } from "next-intl";
+import { LoadingModal } from "@/components/modal/loading";
 
 export default function SignIn() {
   const router = useRouter();
@@ -61,6 +62,8 @@ export default function SignIn() {
           {t("Don't have an account? Join now!")}
         </Link>
       </div>
+
+      {isLoading && <LoadingModal />}
     </>
   );
 }

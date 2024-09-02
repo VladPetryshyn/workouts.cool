@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AuthErrors } from "../types";
 import { useTranslations } from "next-intl";
+import { LoadingModal } from "@/components/modal/loading";
 
 export default function SignUp() {
   const router = useRouter();
@@ -67,6 +68,7 @@ export default function SignUp() {
           {t("Already have an account? Log in!")}
         </Link>
       </div>
+      {isLoading && <LoadingModal />}
     </>
   );
 }

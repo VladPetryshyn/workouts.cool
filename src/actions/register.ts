@@ -5,6 +5,7 @@ import { connectDB } from "@/lib/mongodb";
 import User from "@/models/User";
 import bcrypt from "bcryptjs";
 import { getTranslations } from "next-intl/server";
+import { useState } from "react";
 
 export const register = async (values: any) => {
   const t = await getTranslations("Authentication");
