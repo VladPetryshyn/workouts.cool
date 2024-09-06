@@ -1,16 +1,15 @@
-import { authOptions } from "@/lib/auth";
+import { getServerUser } from "@/lib/auth";
 import { connectDB } from "@/lib/mongodb";
 import User from "@/models/User";
 import Workout, { WorkoutDocument } from "@/models/Workout";
-import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { createExerciseData } from "../meta";
 import { validateWorkout } from "../validation";
 
 export const POST = async (req: NextRequest) => {
   try {
-    const session = await getServerSession(authOptions);
-    if (session?.user) {
+    const user = await getServerUser();
+    if (user) {
       const data = (await req.json()) as WorkoutDocument;
       const validationObj = {
         title: data.title,
@@ -21,7 +20,7 @@ export const POST = async (req: NextRequest) => {
       if (result.success) {
         await connectDB();
 
-        const author = await User.findById(session.user.id);
+        const author = await User.findById(user.id);
         if (!author) return NextResponse.json({}, { status: 404 });
 
         const newWorkout = new Workout({

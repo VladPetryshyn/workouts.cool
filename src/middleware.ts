@@ -1,51 +1,39 @@
-import { withAuth } from "next-auth/middleware";
 import { NextRequest, NextResponse } from "next/server";
+import { getServerUser } from "./lib/auth";
 
-export default withAuth(
-  async function middleware(request) {
-    const requestHeaders = new Headers(request.headers);
-    requestHeaders.set("x-url", new URL("/", request.url).toString());
-    const pathname = request.nextUrl.pathname;
-    const successfulResponse = NextResponse.next({
-      request: {
-        headers: requestHeaders,
-      },
-    });
-    if (pathname.startsWith("/profile")) return successfulResponse;
-
-    const token = request.nextauth.token;
-    // const response = await getSessionInMiddleware(request);
-
-    // redirect for the home page
-    if (pathname === "/") {
-      if (token)
-        return NextResponse.redirect(
-          new URL(`/profile/${token.id}`, request.url),
-        );
-
-      return NextResponse.redirect(new URL("/hero-page", request.url));
-    }
-
-    // if we have user, then response will be always successfull
-    if (token) return successfulResponse;
-
-    // redirect to the unathorized ui
-    if (
-      pathname.startsWith("/workout-editor") ||
-      pathname.startsWith("/article-editor")
-    ) {
-      return NextResponse.redirect(new URL("/unathorized", request.url));
-    }
-
-    return new Response("Unauthorized", { status: 401 });
-  },
-  {
-    secret: process.env.AUTH_SECRET,
-    callbacks: {
-      authorized: () => true,
+export async function middleware(request: NextRequest) {
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-url", new URL("/", request.url).toString());
+  const pathname = request.nextUrl.pathname;
+  const successfulResponse = NextResponse.next({
+    request: {
+      headers: requestHeaders,
     },
-  },
-);
+  });
+  if (pathname.startsWith("/profile")) return successfulResponse;
+
+  const user = await getServerUser();
+
+  // redirect for the home page
+  if (pathname === "/") {
+    if (user)
+      return NextResponse.redirect(new URL(`/profile/${user.id}`, request.url));
+
+    return NextResponse.redirect(new URL("/hero-page", request.url));
+  }
+
+  // if we have user, then response will be always successfull
+  if (user) return successfulResponse;
+  // redirect to the unathorized ui
+  if (
+    pathname.startsWith("/workout-editor") ||
+    pathname.startsWith("/article-editor")
+  ) {
+    return NextResponse.redirect(new URL("/unathorized", request.url));
+  }
+
+  return new Response("Unauthorized", { status: 401 });
+}
 
 export const config = {
   matcher: [

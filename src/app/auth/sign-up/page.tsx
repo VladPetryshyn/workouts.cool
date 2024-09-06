@@ -27,9 +27,9 @@ export default function SignUp() {
     if (r?.isError) {
       const { isError, ...errors } = r;
       setErrors(errors as AuthErrors);
-      return;
     } else {
-      return router.push("/auth/sign-in");
+      //return router.push("/auth/sign-in");
+      router.push("/");
     }
   };
 

@@ -2,8 +2,6 @@ import { redirect } from "next/navigation";
 import "./styles.scss";
 import { ArticleCard } from "@/components/contentCard";
 import { getWorkouts } from "@/actions/getWorkouts";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 import {
   createArticleEditUrl,
   createArticleUrl,
@@ -14,6 +12,7 @@ import { getArticles } from "@/actions/getArticles";
 import { timeFromMilis } from "@/lib/time";
 import Link from "next/link";
 import { FilledButton } from "@/components/buttons/filled";
+import { getServerUser } from "@/lib/auth";
 
 interface Props {
   params: {
@@ -26,7 +25,7 @@ interface Props {
 
 export default async function Profile({ params, searchParams }: Props) {
   const content = searchParams?.content ?? "articles";
-  const session = await getServerSession(authOptions);
+  const user = await getServerUser();
   if (content !== "workouts" && content !== "articles")
     return redirect(`/profile/${params.id}?content=articles`);
 
@@ -41,13 +40,15 @@ export default async function Profile({ params, searchParams }: Props) {
   }
 
   const linkUrl = articles ? `/article-editor` : `/workout-editor`;
-  const isOwner = params.id === session?.user?.id;
+  const isOwner = params.id === user?.id;
 
   return (
     <section className="profile-content">
-      {isOwner && <Link href={linkUrl}>
-        <FilledButton text="Create new item" />
-      </Link>}
+      {isOwner && (
+        <Link href={linkUrl}>
+          <FilledButton text="Create new item" />
+        </Link>
+      )}
       {articles?.map(({ _id, title, author, contentPreview }) => (
         <ArticleCard
           key={_id}

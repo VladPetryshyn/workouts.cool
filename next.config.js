@@ -9,7 +9,8 @@ const config = {
     esmExternals: "loose", // <-- add this
     serverComponentsExternalPackages: ["mongoose"], // <-- and this
     serverActions: {
-      bodySizeLimit: "5mb",
+      bodySizeLimit: "6mb",
+      responseLimit: "6mb",
     },
   },
   sassOptions: {

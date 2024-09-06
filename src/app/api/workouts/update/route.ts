@@ -1,5 +1,4 @@
-import { authOptions } from "@/lib/auth";
-import { getServerSession } from "next-auth";
+import { getServerUser } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import { revalidateTag } from "next/cache";
@@ -15,8 +14,8 @@ export interface WorkoutUpdate {
 }
 
 export async function PUT(req: NextRequest) {
-  const session = await getServerSession(authOptions);
-  if (session) {
+  const user = await getServerUser();
+  if (user) {
     try {
       const { title, steps, workoutId } = (await req.json()) as WorkoutUpdate;
       const validationObj = {
@@ -29,7 +28,7 @@ export async function PUT(req: NextRequest) {
         connectDB();
 
         await Workout.updateOne(
-          { _id: workoutId, author: session.user.id },
+          { _id: workoutId, author: user.id },
           {
             title,
             steps,
@@ -37,7 +36,7 @@ export async function PUT(req: NextRequest) {
           },
         );
 
-        revalidateTag(createProfileTag(session?.user?.id));
+        revalidateTag(createProfileTag(user?.id));
         revalidateTag(createWorkoutForEditTag(workoutId));
         return NextResponse.json({ status: "success" });
       } else {
@@ -46,7 +45,7 @@ export async function PUT(req: NextRequest) {
         });
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
       return NextResponse.json(e, { status: 505 });
     }
   }

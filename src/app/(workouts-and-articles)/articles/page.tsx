@@ -1,13 +1,12 @@
 import { getArticles } from "@/actions/getArticles";
 import { ArticleCard } from "@/components/contentCard";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { getServerUser } from "@/lib/auth";
 import { createArticleEditUrl, createArticleUrl } from "@/lib/urlCreators";
 import { Fragment } from "react";
 
 export default async function ArticlesPage() {
   const articles = await getArticles();
-  const session = await getServerSession(authOptions);
+  const user = await getServerUser();
 
   return (
     <Fragment>
@@ -21,7 +20,7 @@ export default async function ArticlesPage() {
               id={_id}
               title={title}
               content={contentPreview}
-              isOwner={String(author) === session?.user?.id}
+              isOwner={String(author) === user?.id}
               url={createArticleUrl(_id)}
               editURL={createArticleEditUrl(_id)}
             />
