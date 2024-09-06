@@ -5,10 +5,10 @@ import { FilledButton } from "@/components/buttons/filled";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
-import { signIn } from "next-auth/react";
 import { AuthErrors } from "../types";
 import { useTranslations } from "next-intl";
 import { LoadingModal } from "@/components/modal/loading";
+import { authorize } from "@/actions/authorize";
 
 export default function SignIn() {
   const router = useRouter();
@@ -20,16 +20,16 @@ export default function SignIn() {
     setIsLoading(true);
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const res = await signIn("credentials", {
-      email: formData.get("email"),
-      password: formData.get("password"),
-      redirect: false,
+    const res = await authorize({
+      email: formData.get("email")?.toString(),
+      password: formData.get("password")?.toString(),
     });
-    if (res?.error) {
-      setErrors(JSON.parse(res.error));
-    }
+
     if (res?.ok) {
       return router.push("/");
+    }
+    if (res?.error) {
+      setErrors(res.error as AuthErrors);
     }
     setIsLoading(false);
   };

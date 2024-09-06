@@ -3,7 +3,6 @@ import Image from "next/image";
 import "./photo.scss";
 import { ChangeEvent, FC, useContext, useState } from "react";
 import { MAX_UPLOAD_SIZE } from "@/lib/constants";
-import { useSession } from "next-auth/react";
 import { updatePhoto } from "@/actions/updatePhoto";
 import { LoadingModal } from "@/components/modal/loading";
 import { useTranslations } from "next-intl";
@@ -19,7 +18,6 @@ export const EditPhoto: FC<Props> = ({ userId }) => {
   const t = useTranslations("EditPhoto");
   const context = useContext(NotificationsContext);
 
-  const session = useSession();
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const image = e.target.files?.[0];
     if (image) {
@@ -36,7 +34,8 @@ export const EditPhoto: FC<Props> = ({ userId }) => {
               setIsLoading(false);
               context.pushNotification(t("success"), NotificationTypes.SUCCESS);
             });
-            session.update({ image: reader.result });
+            // we need to update session, or tag, to trigger the header rerender
+            // session.update({ image: reader.result });
           }
         };
 

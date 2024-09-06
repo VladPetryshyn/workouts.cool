@@ -10,6 +10,6 @@ export const getPhoto = async (userId: string) => {
 
     return user.image;
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };

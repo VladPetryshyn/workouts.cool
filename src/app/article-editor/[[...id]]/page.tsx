@@ -15,7 +15,7 @@ interface Props {
 
 export default async function ArticlesEditorPage({ params }: Props) {
   const headerList = headers();
-  const url = headerList.get("x-url");
+  const url = headerList.get("x-url") || "http://localhost:3000/";
 
   const articleId = params.id?.[0];
   const isMobile = await isMobileDevice();

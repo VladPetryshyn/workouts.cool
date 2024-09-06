@@ -1,11 +1,13 @@
 "use client";
-import { signOut, useSession } from "next-auth/react";
 import "./styles.scss";
 import { FC } from "react";
 import Image from "next/image";
 import { OutlinedButton } from "../buttons/outlined";
 import { EditUsername } from "./edit/username";
 import { EditPhoto } from "./edit/photo";
+import { useUser } from "@/hooks/useUser";
+import { logout } from "@/actions/logout";
+import { useRouter } from "next/navigation";
 
 interface Props {
   username: string;
@@ -15,9 +17,17 @@ interface Props {
 }
 
 export const ProfileCard: FC<Props> = ({ username, id, image, className }) => {
-  const session = useSession();
+  const user = useUser();
+  const router = useRouter();
 
-  const isOwner = session.data?.user.id === id;
+  const onLogout = async () => {
+    const didLogout = await logout();
+    if (didLogout) {
+      router.replace("/");
+    }
+  };
+
+  const isOwner = user?.id === id;
   return (
     <div className={`profile-card ${className}`}>
       <div className="profile-card-img">
@@ -36,7 +46,7 @@ export const ProfileCard: FC<Props> = ({ username, id, image, className }) => {
       {isOwner && (
         <OutlinedButton
           text="Logout"
-          onClick={() => signOut()}
+          onClick={onLogout}
           className="profile-card-logout"
         />
       )}

@@ -1,19 +1,19 @@
 "use server";
-import { authOptions } from "@/lib/auth";
+import { getServerUser } from "@/lib/auth";
 import { connectDB } from "@/lib/mongodb";
 import Workout from "@/models/Workout";
-import { getServerSession } from "next-auth";
 
 export const deleteWorkout = async (articleId: string) => {
   try {
     await connectDB();
-    const session = await getServerSession(authOptions);
+    const user = await getServerUser();
     await Workout.findOneAndDelete({
       _id: articleId,
-      author: session?.user?.id,
+      author: user?.id,
     });
     return true;
-  } catch {
+  } catch (e){
+    console.error(e);
     return false;
   }
 };

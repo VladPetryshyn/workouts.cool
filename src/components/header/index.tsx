@@ -6,14 +6,14 @@ import classNames from "classnames";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { useSession } from "next-auth/react";
 import { ProfileInfo } from "../profileItem";
 import { usePathname } from "next/navigation";
 import { getPhoto } from "@/actions/getPhoto";
+import { useUser } from "@/hooks/useUser";
 
 export const Header = () => {
   const [isClicked, toggleIsClicked, setIsClicked] = useToggle();
-  const session = useSession();
+  const user = useUser();
   const path = usePathname();
   const [profilePic, setProfilePic] = useState();
 
@@ -22,12 +22,12 @@ export const Header = () => {
   }, [path]);
 
   useEffect(() => {
-    if (session.data?.user) {
-      getPhoto(session.data.user.id).then((img) => {
+    if (user?.id) {
+      getPhoto(user.id).then((img) => {
         setProfilePic(img);
       });
     }
-  }, [session]);
+  }, [user]);
 
   useEffect(() => {
     if (isClicked) {
@@ -42,8 +42,9 @@ export const Header = () => {
   }, [isClicked]);
   const t = useTranslations("Header");
 
-  const isAuthenticated = session.status === "authenticated";
-  const profileUrl = `/profile/${session.data?.user.id}`;
+  const isAuthenticated = !!user;
+  const profileUrl = `/profile/${user?.id}`;
+
   return (
     <header className="header">
       <div className={classNames("header-content", { hidden: !isClicked })}>
@@ -65,8 +66,8 @@ export const Header = () => {
         <nav className="header-nav">
           {isAuthenticated && (
             <ProfileInfo
-              profileId={session?.data?.user?.id}
-              username={session?.data?.user?.username}
+              profileId={user?.id}
+              username={user?.username}
               image={profilePic}
             />
           )}

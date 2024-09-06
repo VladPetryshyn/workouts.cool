@@ -1,6 +1,5 @@
 import { ArticleCard } from "@/components/contentCard";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { getServerUser } from "@/lib/auth";
 import { createWorkoutEditUrl, createWorkoutUrl } from "@/lib/urlCreators";
 import { getWorkouts } from "@/actions/getWorkouts";
 import { timeFromMilis } from "@/lib/time";
@@ -8,7 +7,7 @@ import { Fragment } from "react";
 
 export default async function WorkoutsPage() {
   const workouts = await getWorkouts();
-  const session = await getServerSession(authOptions);
+  const user = await getServerUser();
 
   return (
     <Fragment>
@@ -23,7 +22,7 @@ export default async function WorkoutsPage() {
                 id={_id}
                 title={title}
                 content={`Time needed: ${timeFromMilis(timeNeeded)}  \nExercise Amount: ${exerciseAmount}`}
-                isOwner={String(author) === session?.user?.id}
+                isOwner={String(author) === user?.id}
                 url={createWorkoutUrl(_id)}
                 editURL={createWorkoutEditUrl(_id)}
                 workout={true}

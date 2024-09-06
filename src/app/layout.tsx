@@ -54,12 +54,10 @@ export default async function RootLayout({
       <title>Cool workouts</title>
       <body>
         <NextIntlClientProvider messages={messages}>
-          <NextAuthProvider>
-            <NotificationsComponent>
-              <Header />
-              {children}
-            </NotificationsComponent>
-          </NextAuthProvider>
+          <NotificationsComponent>
+            <Header />
+            {children}
+          </NotificationsComponent>
         </NextIntlClientProvider>
       </body>
     </html>

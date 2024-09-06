@@ -6,8 +6,7 @@ import { WorkoutPreviewCard } from "@/components/workoutPreviewCard";
 import { OutlinedButton } from "@/components/buttons/outlined";
 import { getWorkout } from "@/actions/getWorkout";
 import { timeFromMilis } from "@/lib/time";
-import { authOptions } from "@/lib/auth";
-import { getServerSession } from "next-auth";
+import { getServerUser } from "@/lib/auth";
 import { DeleteWorkoutWorkoutPage } from "./DeleteWorkoutWorkoutPage";
 
 export default async function WorkoutPage({
@@ -16,8 +15,8 @@ export default async function WorkoutPage({
   params: { id: string };
 }) {
   const workoutData = await getWorkout(id);
-  const data = await getServerSession(authOptions);
-  const isOwner = workoutData.author._id.toString() === data?.user.id;
+  const data = await getServerUser();
+  const isOwner = workoutData.author._id.toString() === data?.id;
 
   return (
     <>

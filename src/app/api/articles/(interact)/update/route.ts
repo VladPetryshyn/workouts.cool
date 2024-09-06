@@ -1,5 +1,3 @@
-import { authOptions } from "@/lib/auth";
-import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Article from "@/models/Articles";
@@ -7,6 +5,7 @@ import { revalidateTag } from "next/cache";
 import { createArticleForEditTag, createProfileTag } from "@/lib/fetching";
 import { makeContentPreview } from "@/lib/rich-text2html";
 import { articleValidationScheme } from "../validation";
+import { getServerUser } from "@/lib/auth";
 
 export interface ArticleUpdate {
   title: string;
@@ -15,8 +14,8 @@ export interface ArticleUpdate {
 }
 
 export async function PUT(req: NextRequest) {
-  const session = await getServerSession(authOptions);
-  if (session) {
+  const user = await getServerUser();
+  if (user) {
     try {
       const { title, content, articleId } = (await req.json()) as ArticleUpdate;
 
@@ -31,7 +30,7 @@ export async function PUT(req: NextRequest) {
         connectDB();
 
         await Article.updateOne(
-          { _id: articleId, author: session.user.id },
+          { _id: articleId, author: user.id },
           {
             title,
             content,
@@ -39,7 +38,7 @@ export async function PUT(req: NextRequest) {
           },
         );
 
-        revalidateTag(createProfileTag(session?.user?.id));
+        revalidateTag(createProfileTag(user?.id));
         revalidateTag(createArticleForEditTag(articleId));
         return NextResponse.json({ status: "success" });
       } else {
