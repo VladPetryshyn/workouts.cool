@@ -3,7 +3,6 @@ import "./globals.scss";
 import { Header } from "@/components/header";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
-import NextAuthProvider from "@/components/next-auth-provider";
 import NotificationsComponent from "@/components/notifications";
 import { Roboto, Roboto_Mono } from "next/font/google";
 
@@ -54,12 +53,10 @@ export default async function RootLayout({
       <title>Cool workouts</title>
       <body>
         <NextIntlClientProvider messages={messages}>
-          <NextAuthProvider>
-            <NotificationsComponent>
-              <Header />
-              {children}
-            </NotificationsComponent>
-          </NextAuthProvider>
+          <NotificationsComponent>
+            <Header />
+            {children}
+          </NotificationsComponent>
         </NextIntlClientProvider>
       </body>
     </html>

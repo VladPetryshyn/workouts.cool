@@ -1,88 +1,60 @@
-import { connectDB } from "@/lib/mongodb";
-import User from "@/models/User";
-import { getServerSession, type NextAuthOptions } from "next-auth";
-import credentials from "next-auth/providers/credentials";
-import bcrypt from "bcryptjs";
-import { signInScheme } from "@/app/auth/validation";
-import {
-  GetServerSidePropsContext,
-  NextApiRequest,
-  NextApiResponse,
-} from "next";
+import { COOKIE_KEY, getJwtSecretKey } from "./constants";
+import { cookies } from "next/headers";
+import { jwtVerify, SignJWT } from "jose";
 
-export const authOptions: NextAuthOptions = {
-  secret: process.env.AUTH_SECRET,
-  providers: [
-    credentials({
-      name: "Credentials",
-      id: "credentials",
-      credentials: {
-        email: { label: "Email", type: "text" },
-        password: { label: "Password", type: "password" },
-      },
-      async authorize(credentials) {
-        const result = signInScheme.safeParse(credentials);
-        if (result.success) {
-          await connectDB();
-          const user = await User.findOne({
-            email: credentials?.email,
-          }).select("+password");
+export interface SessionUser {
+  id: string;
+  username: string;
+}
 
-          if (!user)
-            throw new Error(JSON.stringify({ email: ["Wrong Email!"] }));
+export const createToken = async (user: SessionUser) => {
+  try {
+    const value = await new SignJWT({ ...user })
+      .setProtectedHeader({
+        alg: "HS256",
+      })
+      .setIssuedAt()
+      .sign(getJwtSecretKey());
 
-          const passwordMatch = await bcrypt.compare(
-            credentials!.password,
-            user.password,
-          );
-
-          if (!passwordMatch)
-            throw new Error(JSON.stringify({ password: ["Wrong Password"] }));
-
-          return user;
-        } else {
-          throw new Error(
-            JSON.stringify(result?.error?.formErrors?.fieldErrors),
-          );
-        }
-      },
-    }),
-  ],
-  session: {
-    strategy: "jwt",
-  },
-  callbacks: {
-    async jwt({ token, account, user, trigger, session }) {
-      if (trigger === "update") {
-        if (session?.username) {
-          token.username = session?.username;
-        }
-      }
-
-      if (user && token) {
-        if (!session?.username) token.username = user?.username;
-        token.id = user?._id;
-        token.email = user?.email;
-      }
-
-      return token;
-    },
-    async session({ session, token, user }) {
-      // Send properties to the client, like an access_token and user id from a provider.
-      session.user.username = token.username;
-      session.user.id = token.id;
-      session.user.email = token.email;
-
-      return session;
-    },
-  },
+    cookies().set(COOKIE_KEY, value);
+    return true;
+  } catch (e) {
+    console.error(e, "create token");
+    return false;
+  }
 };
 
-export function auth(
-  ...args:
-    | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]]
-    | [NextApiRequest, NextApiResponse]
-    | []
-) {
-  return getServerSession(...args, authOptions);
-}
+export const verifyJWT = async (value: string) => {
+  try {
+    const token = (await jwtVerify(value, getJwtSecretKey())).payload;
+    return token as unknown as SessionUser;
+  } catch (e) {
+    console.error(e, "verfiy jwt");
+    return undefined;
+  }
+};
+
+export const updateTokenUsername = async (username: string) => {
+  try {
+    const origValue = cookies().get(COOKIE_KEY);
+    const user = await verifyJWT(origValue!.value);
+    if (user) {
+      user.username = username;
+      createToken(user);
+
+      return user;
+    }
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const getServerUser = async () => {
+  const cookie = cookies().get(COOKIE_KEY);
+
+  if (cookie?.value) {
+    return await verifyJWT(cookie.value);
+  }
+
+  return undefined;
+};

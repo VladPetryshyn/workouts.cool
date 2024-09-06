@@ -1,7 +1,5 @@
-import { authOptions } from "@/lib/auth";
 import "./hero-page.scss";
 import { OutlinedButton } from "@/components/buttons/outlined";
-import { getServerSession } from "next-auth";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 

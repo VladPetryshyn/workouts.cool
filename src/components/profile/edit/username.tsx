@@ -4,7 +4,7 @@ import { EditModal } from "@/components/modal/edit";
 import { NotificationsContext } from "@/components/notifications";
 import { NotificationTypes } from "@/components/notifications/reducer";
 import { TextField } from "@/components/textfields/textfield";
-import { useSession } from "next-auth/react";
+import { updateTokenUsername } from "@/lib/auth";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FC, useContext, useRef, useState } from "react";
@@ -15,7 +15,6 @@ interface Props {
 }
 
 export const EditUsername: FC<Props> = ({ username, userId }) => {
-  const session = useSession();
   const router = useRouter();
   const input = useRef<HTMLInputElement>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -31,7 +30,7 @@ export const EditUsername: FC<Props> = ({ username, userId }) => {
       const msg = await updateUsername(value, userId);
       if (msg === "") {
         router.refresh();
-        session.update({ username: value });
+        // updateTokenUsername({ username: value });
         context.pushNotification(
           "Username was successfully changed",
           NotificationTypes.SUCCESS,

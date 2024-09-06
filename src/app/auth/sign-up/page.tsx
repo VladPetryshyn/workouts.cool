@@ -23,13 +23,14 @@ export default function SignUp() {
       password: formData.get("password"),
       username: formData.get("username"),
     });
+
     setIsLoading(false);
     if (r?.isError) {
       const { isError, ...errors } = r;
       setErrors(errors as AuthErrors);
-      return;
     } else {
-      return router.push("/auth/sign-in");
+      //return router.push("/auth/sign-in");
+      router.push("/");
     }
   };
 

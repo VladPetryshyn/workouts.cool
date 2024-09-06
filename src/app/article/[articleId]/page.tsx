@@ -1,14 +1,13 @@
 import { getArticle } from "@/actions/getArticle";
 import { redirect } from "next/navigation";
 import "./styles.scss";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 import Image from "next/image";
 import Link from "next/link";
 import { isMobileDevice } from "@/lib/user-agent";
 import { richTextToHtml } from "@/lib/rich-text2html";
 import { DeleteArticleArticlePage } from "./delete";
 import { ProfileInfo } from "@/components/profileItem";
+import { getServerUser } from "@/lib/auth";
 
 interface Props {
   params: {
@@ -17,10 +16,10 @@ interface Props {
 }
 
 export default async function ArticleId({ params: { articleId } }: Props) {
-  const session = await getServerSession(authOptions);
+  const user = await getServerUser();
   const article = await getArticle(articleId);
   const authorId = article.author._id.toString();
-  const isOwner = authorId === session?.user?.id;
+  const isOwner = authorId === user?.id;
   const isMobile = await isMobileDevice();
   if (!article) redirect("/404");
   if (article.hidden && !isOwner) redirect("/404");
@@ -34,7 +33,12 @@ export default async function ArticleId({ params: { articleId } }: Props) {
             {article.title}
             {isOwner && !isMobile && (
               <Link href={`/article-editor/${article.id}`}>
-                <Image width={40} height={40} src="/pencil.svg" alt="Edit icon" />
+                <Image
+                  width={40}
+                  height={40}
+                  src="/pencil.svg"
+                  alt="Edit icon"
+                />
               </Link>
             )}
             {isOwner && (

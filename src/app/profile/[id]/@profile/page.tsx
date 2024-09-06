@@ -16,7 +16,7 @@ export default async function Profile({ params, searchParams }: Props) {
   try {
     const active = searchParams.content ?? "articles";
     const headerList = headers();
-    const url = headerList.get("x-url") || "https://workouts-cool-n6u5bfp74-vladpetryshyns-projects.vercel.app/";
+    const url = headerList.get("x-url") || "http://localhost:3000";
 
     const resp = await fetch(`${url}/api/profile/${params.id}`, {
       method: "GET",
