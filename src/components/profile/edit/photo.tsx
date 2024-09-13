@@ -8,6 +8,7 @@ import { LoadingModal } from "@/components/modal/loading";
 import { useTranslations } from "next-intl";
 import { NotificationsContext } from "@/components/notifications";
 import { NotificationTypes } from "@/components/notifications/reducer";
+import { useSession } from "@/hooks/auth/useSession";
 
 interface Props {
   userId: string;
@@ -17,6 +18,7 @@ export const EditPhoto: FC<Props> = ({ userId }) => {
   const [isLoading, setIsLoading] = useState(false);
   const t = useTranslations("EditPhoto");
   const context = useContext(NotificationsContext);
+  const session = useSession();
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const image = e.target.files?.[0];
@@ -33,6 +35,7 @@ export const EditPhoto: FC<Props> = ({ userId }) => {
             updatePhoto(reader.result as string, userId).then(() => {
               setIsLoading(false);
               context.pushNotification(t("success"), NotificationTypes.SUCCESS);
+              session.triggerAnUpdate();
             });
             // we need to update session, or tag, to trigger the header rerender
             // session.update({ image: reader.result });

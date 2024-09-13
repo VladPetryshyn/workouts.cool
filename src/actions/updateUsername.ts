@@ -1,5 +1,4 @@
 "use server";
-import { updateTokenUsername } from "@/lib/auth";
 import { connectDB } from "@/lib/mongodb";
 import User from "@/models/User";
 import { getTranslations } from "next-intl/server";
@@ -17,7 +16,6 @@ export const updateUsername = async (newUsername: string, id: string) => {
     if (user) return t("this_username_is_already_taken");
 
     await User.findByIdAndUpdate(id, { username: newUsername });
-    updateTokenUsername(newUsername);
     return "";
   } catch {
     return t("server error");

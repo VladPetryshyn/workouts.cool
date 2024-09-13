@@ -9,11 +9,11 @@ import { useTranslations } from "next-intl";
 import { ProfileInfo } from "../profileItem";
 import { usePathname } from "next/navigation";
 import { getPhoto } from "@/actions/getPhoto";
-import { useUser } from "@/hooks/useUser";
+import { useSession } from "@/hooks/auth/useSession";
 
 export const Header = () => {
   const [isClicked, toggleIsClicked, setIsClicked] = useToggle();
-  const user = useUser();
+  const { state: user } = useSession();
   const path = usePathname();
   const [profilePic, setProfilePic] = useState();
 
@@ -42,7 +42,7 @@ export const Header = () => {
   }, [isClicked]);
   const t = useTranslations("Header");
 
-  const isAuthenticated = !!user;
+  const isAuthenticated = user.valid;
   const profileUrl = `/profile/${user?.id}`;
 
   return (
@@ -66,8 +66,8 @@ export const Header = () => {
         <nav className="header-nav">
           {isAuthenticated && (
             <ProfileInfo
-              profileId={user?.id}
-              username={user?.username}
+              profileId={user?.id!}
+              username={user?.username!}
               image={profilePic}
             />
           )}

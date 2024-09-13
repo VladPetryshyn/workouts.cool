@@ -5,7 +5,7 @@ import Image from "next/image";
 import { OutlinedButton } from "../buttons/outlined";
 import { EditUsername } from "./edit/username";
 import { EditPhoto } from "./edit/photo";
-import { useUser } from "@/hooks/useUser";
+import { useSession } from "@/hooks/auth/useSession";
 import { logout } from "@/actions/logout";
 import { useRouter } from "next/navigation";
 
@@ -17,7 +17,7 @@ interface Props {
 }
 
 export const ProfileCard: FC<Props> = ({ username, id, image, className }) => {
-  const user = useUser();
+  const { state: user } = useSession();
   const router = useRouter();
 
   const onLogout = async () => {

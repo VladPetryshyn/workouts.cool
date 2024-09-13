@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import NotificationsComponent from "@/components/notifications";
 import { Roboto, Roboto_Mono } from "next/font/google";
+import { SessionContextWrapper } from "@/components/sessionContext";
 
 const roboto = Roboto({
   subsets: ["cyrillic", "latin"],
@@ -53,10 +54,12 @@ export default async function RootLayout({
       <title>Cool workouts</title>
       <body>
         <NextIntlClientProvider messages={messages}>
-          <NotificationsComponent>
-            <Header />
-            {children}
-          </NotificationsComponent>
+          <SessionContextWrapper>
+            <NotificationsComponent>
+              <Header />
+              {children}
+            </NotificationsComponent>
+          </SessionContextWrapper>
         </NextIntlClientProvider>
       </body>
     </html>
