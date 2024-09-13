@@ -1,3 +1,4 @@
+"use server";
 import { COOKIE_KEY, getJwtSecretKey } from "./constants";
 import { cookies } from "next/headers";
 import { jwtVerify, SignJWT } from "jose";
