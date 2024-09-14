@@ -1,5 +1,5 @@
 "use server";
-import { COOKIE_KEY, getJwtSecretKey } from "./constants";
+import { COOKIE_KEY, getJwtSecretKey, ONE_DAY } from "./constants";
 import { cookies } from "next/headers";
 import { jwtVerify, SignJWT } from "jose";
 
@@ -8,16 +8,22 @@ export interface SessionUser {
   username: string;
 }
 
-export const createToken = async (user: SessionUser) => {
+export interface ExtendedSessionUser extends SessionUser {
+  expiresInSec: number;
+}
+
+export const createToken = async (user: SessionUser, expiry?: number) => {
+  const expiresInSec = expiry ?? Date.now() + ONE_DAY * 7;
   try {
-    const value = await new SignJWT({ ...user })
+    const value = await new SignJWT({ ...user, expiresInSec })
       .setProtectedHeader({
         alg: "HS256",
       })
+      .setExpirationTime(expiresInSec)
       .setIssuedAt()
       .sign(getJwtSecretKey());
 
-    cookies().set(COOKIE_KEY, value);
+    cookies().set(COOKIE_KEY, value, { expires: expiresInSec });
     return true;
   } catch (e) {
     console.error(e, "create token");
@@ -28,7 +34,7 @@ export const createToken = async (user: SessionUser) => {
 export const verifyJWT = async (value: string) => {
   try {
     const token = (await jwtVerify(value, getJwtSecretKey())).payload;
-    return token as unknown as SessionUser;
+    return token as unknown as ExtendedSessionUser;
   } catch (e) {
     console.error(e, "verfiy jwt");
     return undefined;
@@ -41,7 +47,7 @@ export const updateTokenUsername = async (username: string) => {
     const user = await verifyJWT(origValue!.value);
     if (user) {
       user.username = username;
-      createToken(user);
+      createToken(user, user.expiresInSec);
 
       return user;
     }

@@ -17,12 +17,13 @@ interface Props {
 }
 
 export const ProfileCard: FC<Props> = ({ username, id, image, className }) => {
-  const { state: user } = useSession();
+  const { state: user, logout: logoutClient } = useSession();
   const router = useRouter();
 
   const onLogout = async () => {
     const didLogout = await logout();
     if (didLogout) {
+      logoutClient();
       router.replace("/");
     }
   };

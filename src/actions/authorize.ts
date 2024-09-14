@@ -31,7 +31,7 @@ export const authorize = async (credentials: Credentials) => {
         return { error: { password: ["Wrong Password"] }, ok: false };
 
       await createToken({ username: user.username, id: user._id });
-      return { error: {}, ok: true };
+      return { error: {}, ok: true, user: {id: user.id, username: user.username} };
     } catch (err) {
       console.error(err);
       return { error: err, ok: false };
