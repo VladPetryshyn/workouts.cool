@@ -23,7 +23,8 @@
     "Username": "Username",
     "Register": "Register",
     "Already have an account? Log in!": "Already have an account? Log in!",
-    "This email already exists": "This email already exists"
+    "This email already exists": "This email already exists",
+    "This username is already taken": "This username is already taken"
   },
   "UsernameChange": {
     "this_username_is_already_taken": "This username is already taken!",

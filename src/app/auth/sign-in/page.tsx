@@ -9,8 +9,10 @@ import { AuthErrors } from "../types";
 import { useTranslations } from "next-intl";
 import { LoadingModal } from "@/components/modal/loading";
 import { authorize } from "@/actions/authorize";
+import { useSession } from "@/hooks/auth/useSession";
 
 export default function SignIn() {
+  const { initStore } = useSession();
   const router = useRouter();
   const [errors, setErrors] = useState<AuthErrors>({});
   const [isLoading, setIsLoading] = useState(false);
@@ -25,7 +27,8 @@ export default function SignIn() {
       password: formData.get("password")?.toString(),
     });
 
-    if (res?.ok) {
+    if (res?.ok && res.user) {
+      initStore({ valid: true, id: res.user.id, username: res.user.username });
       return router.push("/");
     }
     if (res?.error) {

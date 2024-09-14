@@ -6,6 +6,8 @@ import { updateTokenUsername } from "@/lib/auth";
 const defaultObj = {
   updateUsername: async (n: string) => {},
   triggerAnUpdate: () => {},
+  logout: () => {},
+  initStore: (n: State) => {},
   state: { valid: false } as State,
 };
 
@@ -52,8 +54,15 @@ export const SessionContextWrapper = ({
   const triggerAnUpdate = () =>
     dispatch({ type: SessionActions.TRIGGER_UPDATE });
 
+  const logout = () => dispatch({ type: SessionActions.LOGOUT });
+
+  const initStore = (data: State) =>
+    dispatch({ type: SessionActions.INITIALIZE_STORE, payload: data });
+
   return (
-    <sessionContext.Provider value={{ updateUsername, triggerAnUpdate, state }}>
+    <sessionContext.Provider
+      value={{ updateUsername, triggerAnUpdate, state, logout, initStore }}
+    >
       {children}
     </sessionContext.Provider>
   );

@@ -11,4 +11,6 @@ export function getJwtSecretKey() {
   return enc;
 }
 
+export const ONE_DAY = 86400000;
+
 // export const SECRET = createSecretKey(process.env.JWT_SECRET!, "utf-8");

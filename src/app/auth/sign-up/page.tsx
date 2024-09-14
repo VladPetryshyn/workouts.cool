@@ -9,8 +9,10 @@ import { useState } from "react";
 import { AuthErrors } from "../types";
 import { useTranslations } from "next-intl";
 import { LoadingModal } from "@/components/modal/loading";
+import { useSession } from "@/hooks/auth/useSession";
 
 export default function SignUp() {
+  const { initStore } = useSession();
   const router = useRouter();
   const [errors, setErrors] = useState<AuthErrors>();
   const t = useTranslations("Authentication");
@@ -28,8 +30,8 @@ export default function SignUp() {
     if (r?.isError) {
       const { isError, ...errors } = r;
       setErrors(errors as AuthErrors);
-    } else {
-      //return router.push("/auth/sign-in");
+    } else if (r.user && r.user.id) {
+      initStore({ valid: true, id: r.user.id, username: r.user.username });
       router.push("/");
     }
   };

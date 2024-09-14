@@ -4,6 +4,7 @@ export enum SessionActions {
   UPDATE_USERNAME = "UPDATE_USERNAME",
   TRIGGER_UPDATE = "TRIGGER_UPDATE",
   INITIALIZE_STORE = "INITIALIZE_STORE",
+  LOGOUT = "LOGOUT",
 }
 
 export type State = {
@@ -27,7 +28,11 @@ interface initializeStore {
   payload: State;
 }
 
-type Actions = initializeStore | triggerAnUpdate | updateUsername;
+interface logout {
+  type: SessionActions.LOGOUT;
+}
+
+type Actions = initializeStore | triggerAnUpdate | updateUsername | logout;
 
 const reducer = (state: State, action: Actions) => {
   switch (action.type) {
@@ -43,6 +48,8 @@ const reducer = (state: State, action: Actions) => {
       };
     case SessionActions.INITIALIZE_STORE:
       return { ...state, ...action.payload, valid: true };
+    case SessionActions.LOGOUT:
+      return { valid: false };
     default:
       return state;
   }
